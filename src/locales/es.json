@@ -1,0 +1,12 @@
+{
+  "deckCardNameFilter": "Nombre",
+  "deckCardTypeFilter": "Tipos",
+  "deckFilters": "Filtros",
+  
+  "errorButton": "Aceptar",
+  "errorTitle": "Error",
+
+  "loadingText": "Cargando",
+
+  "message": "hola i18n !!"
+}

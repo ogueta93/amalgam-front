@@ -1,0 +1,76 @@
+export default {
+    app: null,
+    options: null,
+    translator: null,
+    defaultLocation: "#app",
+    loadingElements: [],
+
+    getTemplate: function() {
+        return "<div class='loading-content'><div class='loading-symbol'>"
+        + "<div class='spinner-grow loading-spinner'></div>"
+        + "</div><div class='loading-text'>"+ this.translator.t('loading.text') +"</div></div>";
+    },
+    appendLoading: function(loadingName) {
+        var loading = this.findLoadingByName(loadingName);
+        loading.el.insertAdjacentHTML('afterbegin', this.getTemplate());
+
+        if (loading.selector !== this.defaultLocation) {
+            var elLoading = loading.el.children[0];
+
+            elLoading.style.height = loading.el.offsetHeight.toString() + 'px';
+            elLoading.style.width = loading.el.offsetWidth.toString() + 'px';
+            elLoading.style.zIndex = 1;
+        }  
+    },
+    findLoadingByName: function(loadingName) {
+        var loading = this.loadingElements.filter(function(obj){
+            if (obj.name === loadingName) {
+                return obj;
+            }
+        });
+
+        return loading[0];
+    },
+    removeLoadingByName: function(loadingName) {
+        for (var i = 0 ; i < this.loadingElements.length; i++)
+        {
+            if(this.loadingElements[i].name === loadingName) {
+                this.loadingElements.splice(i);
+                return;
+            }
+        }
+    },
+    start: function(loadingName, selector) {
+        if (this.translator === null) {
+            this.translator = this.app.$i18n;
+        }
+
+        if (selector === undefined) {
+            selector = this.defaultLocation;
+        }
+
+        this.loadingElements.push({
+            selector: selector,
+            el: document.querySelector(selector),
+            name: loadingName,
+        });
+
+        this.appendLoading(loadingName);
+    },
+    end: function(loadingName) {
+        var loading = this.findLoadingByName(loadingName);
+
+        if (loading) {
+            loading.el.querySelector('.loading-content').remove();
+        }
+
+        this.removeLoadingByName(loadingName);
+    },
+    clean: function() {
+        this.loadingElements = [];
+        var loadingEl = document.querySelector('.loading-content');
+        if (loadingEl) {
+            loadingEl.remove();
+        }
+    }
+}

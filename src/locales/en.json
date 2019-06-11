@@ -1,0 +1,34 @@
+{
+    "deck": {          
+        "deckCardNameFilter": "Card Name",
+        "deckCardTypeFilter": "Types",
+        "deckTitle": "Deck"
+    },
+
+    "error": {
+        "errorButton": "Accept",
+        "errorTitle": "Error"
+    },
+
+    "loading": {
+        "text": "Loading"
+    },
+
+    "message": "hello i18n !!",
+
+    "notification": {
+        "acceptChallenge": "Go",
+        "battleIsReadyMsg": "{nickName} has accepted the challenge", 
+        "challengeMsg": "{nickName} wants to fight with you",
+        "goToChallenge": "Take Challenge",
+        "refuse": "Refuse"
+    },
+
+    "userFinder": {
+        "headerTitle": "Player Finder",
+        "onlineUserFilter": "Connected",
+        "onlyFriendsFilter": "Only Friends",
+        "optionsFilter": "Options",
+        "userNameFilter": "Nickname"
+    }
+}

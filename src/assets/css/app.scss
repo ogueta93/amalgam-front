@@ -1,0 +1,194 @@
+/** global */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ddd !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #666; 
+}
+
+
+html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: #e4e5e6;
+    height: 100%;
+    width: 100%;
+}
+
+#app {
+    height: 100%;
+    width: 100%;
+}
+/** End global */
+
+/** Element game-content */
+$game-content-background-color: #f8f9fa;
+$game-content-header-background-color: #f0f3f5;
+$game-content-border-color: #c8ced3;
+
+$game-header-filters-search-buttom-color: #1a73e8;
+
+.game-content {
+    width: 100%;
+    height: 100%;
+    font-family: 'Audiowide', cursive;
+    background-color: $game-content-background-color;
+
+    .game-content-header {
+        width: 100%;
+        height: 10%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid $game-content-border-color;
+        background: $game-content-header-background-color;
+
+        .game-header-title {
+            font-size: 18px;
+            margin-right: auto;
+        }
+        
+        .game-header-controls {
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            i {
+                margin: 5px;
+            }
+        }
+    }
+
+    .game-content-body {
+        height: 90%;
+        width: 100%;
+        overflow-y: auto;
+        padding: 10px;
+        border: 1px solid $game-content-border-color;
+
+        .game-filters {
+            display: flex;
+            flex-direction: column;
+            height: 0%;
+            width: 100%;
+            overflow: hidden;
+            transition: height .25s ease-out;
+            font-size: 1rem;
+
+            .game-filters-content {
+                height: 80%;
+                width: 100%;
+                overflow-y: auto;
+            }
+    
+            .game-filters-bottom {
+                display: flex;
+                flex: 1;
+                width: 100%;
+                align-items: flex-end;
+                justify-content: center;
+                font-size: 1rem;
+    
+                .search-filters-button {
+                    display: flex;
+                    height: 30px;
+                    width: 40px;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2px;
+                    color: white;
+                    background-color: $game-header-filters-search-buttom-color;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+            }
+    
+            .marging-element {
+                margin: 5px;
+            }
+    
+            &.show-filters {
+                height: 30%;
+                overflow-y: auto;
+                padding: 10px;
+                border-bottom: 1px solid #e0c56e;
+            }
+        }
+
+        .game-body-content {
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            padding: 10px;
+            transition: height .25s ease-out;
+    
+            &.show-filters {
+                height: 70%;
+            }
+        }
+    }
+}
+/** END Element game-content */
+
+/** error */
+.app-error {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content:center;
+    align-items:center;
+    background: rgba(89, 90, 90, 0.35);
+    z-index: 10;
+}
+/** END error*/
+
+/** loading-content */
+$loading-spinner-color: #1dbdff;
+
+.loading-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Audiowide', cursive;
+    background: rgba(89, 90, 90, 0.35);
+    z-index: 9;
+
+    .loading-symbol {
+        height: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        font-size: 40px;
+
+        .loading-spinner {
+            color: $loading-spinner-color;
+            width: 5rem;
+            height: 5rem;
+        }
+    }
+
+    .loading-text {
+        height: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        font-size: 40px;
+        color: white;
+    }
+}
+/** END loading-content*/
