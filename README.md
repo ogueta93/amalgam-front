@@ -1,5 +1,8 @@
 # front-amalgam
 
+Amalgan is a card game based on the Final Fantasy VIII minigame called Triple Triad
+https://finalfantasy.fandom.com/wiki/Triple_Triad
+
 ## Project setup
 ```
 yarn install
