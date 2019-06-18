@@ -15,10 +15,12 @@ import Config from '@/config';
 import WebScoketPlugin from '@/plugins/handlers/WebSocketHandler';
 import LocalStoragePlugin from '@/plugins/handlers/LocalStorageHandler';
 import LoadingPlugin from '@/plugins/handlers/LoadingHandler';
+import BattlePlugin from '@/plugins/handlers/BattleHandler';
 
 Vue.use(WebScoketPlugin);
 Vue.use(LocalStoragePlugin);
 Vue.use(LoadingPlugin);
+Vue.use(BattlePlugin);
 
 /** i18n */
 import i18n from './i18n';

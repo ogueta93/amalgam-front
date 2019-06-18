@@ -1,5 +1,5 @@
 <template>
-    <div :class="'game-card ' + card.type.name" @click="test()">
+    <div :class="['game-card ' + card.type.name, {selected: card.selected}]" @click="cardAction">
         <div class="game-card-content">
             <div class="game-card-header">
                 <div class="game-card-name">{{card.name}}</div>
@@ -19,18 +19,29 @@
 </template>
 
 <script>
+import EVENT from '@/constants/Event';
+import BATTLE_PHASE from '@/constants/BattlePhase';
+
 export default {
     name : 'gameCardComponent',
     props: {
-        'card': {
+        card: {
             type: Object,
             required: true
+        },
+        battlePhase: {
+            type: Number,
+            required: false
         }
     },
     data() {
         return {
-            
         }
+    },
+    watch: {
+        'card.selected': function() {
+            this.$el.classList.toggle('selected');
+        },
     },
     mounted: function() {
         /** Initial module instance */
@@ -39,8 +50,14 @@ export default {
         /** after render */
     },
     methods: {
-        test: function() {
-            alert(this.card.name);
+        cardAction: function() {
+            if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE) {
+                this.setToplay();
+            }
+        },
+        setToplay: function() {
+            this.card.selected = !this.card.selected;
+            this.$root.$emit(EVENT.BATTLE_DECK_SELECTION, this.card.userCardId);
         }
     }
 };
@@ -57,7 +74,13 @@ $common-card-color: #5a4646;
     width: 125px;
     height: 175px;
     padding: 5px;
-    margin: 2px;
+    margin: 5px;
+    user-select: none;
+    cursor:  pointer;
+
+    &.selected {
+        box-shadow: 0px 0px 0px 3px rgba(255, 0, 0, 0.8);
+    }
 
     .game-card-content {
         width: 100%;

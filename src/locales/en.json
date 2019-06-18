@@ -1,4 +1,12 @@
 {
+    "cardType": {
+        "none": "None",
+        "common": "Common",
+        "rare": "Rare",
+        "legendary": "Legendary",
+        "unique": "Unique"
+    },
+    
     "deck": {          
         "deckCardNameFilter": "Card Name",
         "deckCardTypeFilter": "Types",
@@ -6,6 +14,7 @@
     },
 
     "error": {
+        "errorBattleDeckSelectionLimit": "Can not choose more than five cards.",
         "errorButton": "Accept",
         "errorTitle": "Error"
     },
@@ -22,6 +31,10 @@
         "challengeMsg": "{nickName} wants to fight with you",
         "goToChallenge": "Take Challenge",
         "refuse": "Refuse"
+    },
+
+    "resumeSelection": {
+        "headerTitle": "Your Card Selection"
     },
 
     "userFinder": {

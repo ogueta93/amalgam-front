@@ -27,8 +27,8 @@
                 </div>
             </div>
             <div class="deck-cards">
-                <div v-if="cards !== null" class="deck-cards-content">
-                    <gameCard v-for="card in cards" :key="card.id" :card="card"></gameCard>
+                <div v-if="cards.length" class="deck-cards-content">
+                    <gameCard v-for="card in cards" :key="card.userCardId" :card="card" :battlePhase="battlePhase"></gameCard>
                 </div>
             </div>
         </div>
@@ -37,33 +37,51 @@
 
 <script>
 import gameCard from '@/components/game/deck/GameCard';
+
+import BATTLE_PHASE from '@/constants/BattlePhase';
 import ACTION from '@/constants/Action';
+import EVENT from '@/constants/Event';
 
 export default {
     name : 'deckComponent',
+    props: {
+        battlePhase: {
+            type: Number,
+            required: false
+        }
+    },
     components: {
         gameCard
     },
     data() {
         return {
-            cards: null,
+            cards: [],
+            cardsSelected: [],
+
             filters: {
                 cardName: "",
                 cardType: 0,
             },
             loadingName: 'deckLoading',
             typeCardOptions: [
-                { value: 0, text: 'None' },
-                { value: 1, text: 'Common' },
-                { value: 2, text: 'Rare' },
-                { value: 3, text: 'Legendary' },
-                { value: 4, text: 'Unique' },
+                { value: 0, text: this.$i18n.t('cardType.none') },
+                { value: 1, text: this.$i18n.t('cardType.common') },
+                { value: 2, text: this.$i18n.t('cardType.rare')  },
+                { value: 3, text: this.$i18n.t('cardType.legendary') },
+                { value: 4, text: this.$i18n.t('cardType.unique') },
             ]
         }
     },
     mounted: function() {
         /** Initial module instance */
         this.getUserCards();
+
+        if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE) {
+            this.$root.$on(EVENT.BATTLE_DECK_SELECTION, this.callbackToggleDeckSelection);
+        }
+    },
+    destroyed: function() {
+        this.$root.$off(EVENT.BATTLE_DECK_SELECTION, this.callbackToggleDeckSelection);
     },
     methods: {
         onSubmit: function(evt) {
@@ -86,12 +104,62 @@ export default {
             this.$webSocket.sendComplexAction(ACTION.GET_USER_CARDS_ACTION, this.$options.name, filters, this.callBackGetUserCards);
             this.$loading.start(this.loadingName);
         },
-        callBackGetUserCards: function(response) {
-            this.cards = response;
 
+        callBackGetUserCards: function(response) {
+            var that = this;
+            var cards = response;
+
+            if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE) {
+                cards.forEach(function(obj, index, array) {
+                    var cardSelected = that.cardsSelected.filter(function(element){
+                        return element.userCardId === obj.userCardId;
+                    });
+
+                    if (cardSelected.length > 0) {
+                        array[index].selected = true;
+                    } else {
+                        array[index].selected = false;
+                    }
+                });
+            }
+
+            this.cards = cards;
             this.$loading.end(this.loadingName);
             this.toggleFilters();
         },
+        callbackToggleDeckSelection: function(userCardId) {
+            var that = this;
+
+            var cardsFiltered = this.cardsSelected.filter(function(obj){
+                return obj.userCardId === userCardId;
+            });
+
+            if (this.cardsSelected.length === 5 && !(cardsFiltered.length > 0)) {
+                this.cards.forEach(function(obj, index){
+                    if (obj.userCardId === userCardId) {
+                        that.cards[index].selected = false;
+                        return;
+                    }
+                });
+                
+                this.$root.$emit(EVENT.ERROR_EVENT, {message: this.$i18n.t("error.errorBattleDeckSelectionLimit"), phase: 2});
+                return;
+            }
+
+            if (cardsFiltered.length > 0) {
+                this.cardsSelected = this.cardsSelected.filter(function(obj){
+                    return obj.userCardId !== userCardId;
+                });
+            } else {
+                var cardSelected = this.cards.filter(function(obj){
+                    return obj.userCardId === userCardId;
+                });
+            
+                this.cardsSelected.push(cardSelected[0]);
+            }
+
+            this.$root.$emit(EVENT.BATTLE_DECK_RESUME_SELECTION, this.cardsSelected);
+        }
     }
 };
 </script>

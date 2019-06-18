@@ -52,6 +52,8 @@ export default {
             this.el.style.display = 'flex';
 
             this.$loading.clean();
+
+            throw this.errorMsg;
         },
         errorButton: function() {
             var that = this;
@@ -59,10 +61,13 @@ export default {
             this.el.style.display = 'none';
             this.errorMsg = null;
             
-            switch(this.phase) {
+            switch (this.phase) {
                 case ERROR_CONSTANTS.WS_AMALGAN_PHASE_FATAL_ERROR:
                     console.log('error');
                     that.$router.push('/');
+                    break;
+                case ERROR_CONSTANTS.WS_AMALGAN_PHASE_COMMMON_ERROR:
+                    console.log('commonError');
                     break;
                 default:
                     that.$router.push('/');

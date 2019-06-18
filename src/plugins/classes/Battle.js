@@ -2,20 +2,16 @@ export default {
     app: null,
     options: null,
     data: null,
-    battle: null
 
     /** Battle properties */
 
     setData: function(data) {
         this.data = data;
-
-        this.setProperties();
     },
-    setProperties: function() {
-        var that = this;
-
-        this.battle = {
-            id: that.data.id
-        };
-    }
+    getData: function() {
+        return this.data;
+    },
+    getPhase: function() {
+        return this.data.progress.main.phase;
+    },
 }
