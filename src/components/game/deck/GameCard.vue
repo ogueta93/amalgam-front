@@ -67,6 +67,7 @@ export default {
 /* Card customization */
 $card-text-color: #ffdf32;
 $card-border-color: #ffef99;
+$card-selected-color:  rgba(255, 0, 0, 0.8);
 
 $common-card-color: #5a4646;
 
@@ -79,7 +80,7 @@ $common-card-color: #5a4646;
     cursor:  pointer;
 
     &.selected {
-        box-shadow: 0px 0px 0px 3px rgba(255, 0, 0, 0.8);
+        box-shadow: 0px 0px 0px 3px $card-selected-color;
     }
 
     .game-card-content {

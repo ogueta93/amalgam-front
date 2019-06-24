@@ -34,7 +34,8 @@
     },
 
     "resumeSelection": {
-        "headerTitle": "Your Card Selection"
+        "headerTitle": "Your Card Selection",
+        "acceptSelectionButton": "Accept Selection"
     },
 
     "userFinder": {
