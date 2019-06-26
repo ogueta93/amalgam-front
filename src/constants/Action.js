@@ -8,5 +8,7 @@ export default {
     LOGIN_ACTION: 'login',
     NEW_BATTLE_ACTION: 'newBattle',
     NOTIFICATION_ACTION: 'gameNotification',
-    REFUSE_BATTLE_ACTION: 'refuseBattle'
+    REFUSE_BATTLE_ACTION: 'refuseBattle',
+
+    SET_CARDS_SELECTION: 'setCardsSelection'
 }

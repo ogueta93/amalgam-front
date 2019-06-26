@@ -15,6 +15,7 @@
 <script>
 import ACTION from '@/constants/Action';
 import BATTLE_PHASE from '@/constants/BattlePhase';
+import LOADING from '@/constants/Loading';
 
 import deck from '@/components/game/Deck';
 import resumeSelection from '@/components/game/ResumeSelection';
@@ -36,7 +37,12 @@ export default {
     },
     mounted: function() {
         /** Initial module instance */
+        this.$webSocket.setEvent(ACTION.SET_CARDS_SELECTION, this.$options.name, this.callBackSetBattleSelection);
+
         this.findBattle();
+    },
+    destroyed: function() {
+        this.$root.$off(EVENT.SET_CARDS_SELECTION);
     },
     updated: function() {
         /** after render */
@@ -58,7 +64,13 @@ export default {
 
        callBackFindBattle: function(response) {
            this.setData(response);
-       }
+       },
+       callBackSetBattleSelection: function(response) {
+           this.$loading.end(LOADING.RESUME_SELECTION_LOADING);
+           
+           console.log('here');
+           this.setData(response);
+       },
     }
 };
 </script>

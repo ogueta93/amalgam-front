@@ -62,7 +62,6 @@ export default {
     mounted: function() {
         var that = this;
         /** Initial module instance */
-
         this.$webSocket.setEvent(ACTION.REFUSE_BATTLE_ACTION, this.componentNameEvent, this.closeNotificationByBattleId)
         this.$webSocket.setEvent(ACTION.ACCEPT_BATTLE_ACTION, this.componentNameEvent, this.closeNotificationByBattleId)
 

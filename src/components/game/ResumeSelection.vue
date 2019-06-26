@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="resume-actions-content" :class="[{'active': cardsSelected.length === 5}]">
-            <div class="accept-selection-button">
+            <div class="accept-selection-button" @click="setCardsSelection()">
                 {{ $t("resumeSelection.acceptSelectionButton") }}
             </div>
         </div>
@@ -46,6 +46,7 @@
 import BATTLE_TYPE from '@/constants/BattleType';
 import ACTION from '@/constants/Action';
 import EVENT from '@/constants/Event';
+import LOADING from '@/constants/Loading';
 
 export default {
     name : 'resumeSelectionComponent',
@@ -66,6 +67,16 @@ export default {
         /** after render */
     },
     methods: {
+        setCardsSelection: function() {
+            this.$loading.start(LOADING.RESUME_SELECTION_LOADING);
+
+            var data = {
+                battleId: this.$battle.getId(),
+                cardsSelected: this.cardsSelected
+            };
+            this.$webSocket.sendAction(ACTION.SET_CARDS_SELECTION, data);
+        },
+
         callbackDeckResumeSelection: function(data) {
             var that = this;
             this.cardsSelected = data;
