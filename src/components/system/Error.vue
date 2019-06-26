@@ -26,8 +26,9 @@ export default {
     data() {
         return {
             el: null,
+            errorPrefix: 'error.messages.',
             errorMsg: null,
-            phase: null,
+            phase: null
         }
     },
     mounted: function()
@@ -43,7 +44,7 @@ export default {
     methods: {
         callBackProcessError: function(data) {
             this.errorTitle = data.title;
-            this.errorMsg = data.message;
+            this.errorMsg =  this.$i18n.t(this.errorPrefix + data.message);
             
             if (data.phase !== undefined) {
                 this.phase = data.phase;

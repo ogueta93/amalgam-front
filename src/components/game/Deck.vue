@@ -142,7 +142,7 @@ export default {
                     }
                 });
                 
-                this.$root.$emit(EVENT.ERROR_EVENT, {message: this.$i18n.t("error.errorBattleDeckSelectionLimit"), phase: 2});
+                this.$root.$emit(EVENT.ERROR_EVENT, {message: 'battleDeckSelectionLimit', phase: 2});
                 return;
             }
 
