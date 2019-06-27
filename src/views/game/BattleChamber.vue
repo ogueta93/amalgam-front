@@ -36,7 +36,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* BattleChamber customization */
     .battle-chamber {
         display: flex;

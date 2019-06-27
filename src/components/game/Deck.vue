@@ -164,7 +164,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* Deck customization */
 $button-color: #1a73e8;
 

@@ -63,7 +63,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* notification customization */
 $notification-counter-background-color: #1a73e8;
 

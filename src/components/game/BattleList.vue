@@ -168,7 +168,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* battleList customization */
 $battle-accept-button-color:#3bda9a;
 $battle-refuse-button-color:#ef5a68;

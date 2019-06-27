@@ -119,7 +119,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* UserFinder customization */
 .user-content {
     display: flex;

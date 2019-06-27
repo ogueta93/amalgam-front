@@ -63,7 +63,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* Card customization */
 $card-text-color: #ffdf32;
 $card-border-color: #ffef99;

@@ -123,7 +123,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* notificationItem customization */
 $new-battle-notification-dark-color: #1a73e8;
 $new-battle-notification-light-color: #4e96f5;

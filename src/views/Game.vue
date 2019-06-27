@@ -51,7 +51,6 @@ export default {
 </script>
 <style lang="scss">
 /* game customization */
-
 .game {
     height: 100%;
     width: 100%;

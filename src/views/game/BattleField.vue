@@ -68,14 +68,13 @@ export default {
        callBackSetBattleSelection: function(response) {
            this.$loading.end(LOADING.RESUME_SELECTION_LOADING);
            
-           console.log('here');
            this.setData(response);
        },
     }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* battleFieldView customization */
 .battle-field {
     height: 100%;

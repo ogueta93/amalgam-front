@@ -77,7 +77,7 @@ export default {
     }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 /* Error customization */
 $error-content-background-color: #f8f9fa;
 $error-header-background-color: #f0f3f5;

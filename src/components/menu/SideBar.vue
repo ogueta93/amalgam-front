@@ -100,7 +100,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* sidebar customization */
 .sidebar-game {
     position: absolute;
