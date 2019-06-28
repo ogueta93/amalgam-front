@@ -7,7 +7,7 @@ import deck from '@/components/game/Deck';
 import ACTION from '@/constants/Action';
 
 export default {
-    name : 'deckView',
+    name : 'deckComponent',
     components: {
         deck
     },

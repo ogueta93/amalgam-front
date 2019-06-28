@@ -1,13 +1,15 @@
 <template>
-    <div v-if="data !== null" class="battle-field">
-
-        <div v-if="battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE" class="battle-field-deck-selection">
+    <div class="battle-field">
+        <div v-if="battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE && !cardsSelected.length" class="battle-field-deck-selection">
             <div class="battle-field-deck-selection-resume">
                  <resumeSelection></resumeSelection>
             </div>
             <div class="battle-field-deck">
                 <deck :battlePhase="battlePhase"></deck>
             </div>
+        </div>
+        <div v-if="battlePhase === BATTLE_PHASE.COIN_THROW_PHASE" class="battle-field-coin-throw">
+            <battleAnnouncement :announcement="ANNOUNCEMENT.COIN_THROW" :extra="{initialTurn: initialTurn}"></battleAnnouncement>
         </div>
     </div>
 </template>
@@ -16,36 +18,49 @@
 import ACTION from '@/constants/Action';
 import BATTLE_PHASE from '@/constants/BattlePhase';
 import LOADING from '@/constants/Loading';
+import ANNOUNCEMENT from '@/constants/Announcement';
 
 import deck from '@/components/game/Deck';
 import resumeSelection from '@/components/game/ResumeSelection';
+import battleAnnouncement from '@/components/game/BattleAnnouncement';
 
 export default {
     name : 'battleFieldView',
     components: {
         deck,
-        resumeSelection
+        resumeSelection,
+        battleAnnouncement
     },
     data() {
         return {
-            battleId: this.$route.params.id,
             BATTLE_PHASE: BATTLE_PHASE,
+            ANNOUNCEMENT: ANNOUNCEMENT,
 
+            battleId: this.$route.params.id,
+            userId: this.$localStorage.getUser().id,
             data: null,
-            battlePhase: null
+            battlePhase: null,
+            cardsSelected: [],
+            initialTurn: null,
         }
     },
     mounted: function() {
         /** Initial module instance */
-        this.$webSocket.setEvent(ACTION.SET_CARDS_SELECTION, this.$options.name, this.callBackSetBattleSelection);
+        this.$webSocket.setEvent(ACTION.SET_CARDS_SELECTION, this.$options.name, this.callBackFindBattle);
 
         this.findBattle();
     },
     destroyed: function() {
-        this.$root.$off(EVENT.SET_CARDS_SELECTION);
+        this.$webSocket.$wsOff(ACTION.SET_CARDS_SELECTION, this.$options.name);
     },
     updated: function() {
         /** after render */
+    },
+    watch: {
+        '$route.params.id' : function() {
+            this.battleId = this.$route.params.id;
+            this.findBattle();
+        }
     },
     methods: {
        findBattle: function() {
@@ -60,16 +75,29 @@ export default {
 
             this.data = this.$battle.getData();
             this.battlePhase = this.$battle.getPhase();
+            this.cardsSelected = this.$battle.getCardsSelected(this.userId);
+            this.initialTurn = this.$battle.getInitialTurn(this.userId);
+
+            this.callPhaseEvents();
+        },
+        callPhaseEvents: function() {
+            switch (this.battlePhase) {
+                case BATTLE_PHASE.CARD_SELECTION_PHASE:
+                    if (this.cardsSelected.length) {
+                        this.$loading.start(LOADING.RESUME_SELECTION_LOADING, '.battle-field', LOADING.RESUME_SELECTION_LOADING_MSG)
+                    }
+                    break;
+                case BATTLE_PHASE.COIN_THROW_PHASE:
+                    this.$loading.end(LOADING.RESUME_SELECTION_LOADING)
+                    break;
+                default:
+                    break;
+            }
         },
 
-       callBackFindBattle: function(response) {
-           this.setData(response);
-       },
-       callBackSetBattleSelection: function(response) {
-           this.$loading.end(LOADING.RESUME_SELECTION_LOADING);
-           
-           this.setData(response);
-       },
+        callBackFindBattle: function(response) {
+            this.setData(response);
+        }
     }
 };
 </script>
@@ -97,6 +125,14 @@ export default {
             height: 65%;
             width: 100%;
         }
+    }
+
+    .battle-field-coin-throw {
+        display: flex;
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
     }
 }
 /* End battleFieldView customization */

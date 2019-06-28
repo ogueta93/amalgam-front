@@ -3,16 +3,17 @@ export default {
     options: null,
     translator: null,
     defaultLocation: "#app",
+    textPrefix: 'loading.messages.',
     loadingElements: [],
 
-    getTemplate: function() {
+    getTemplate: function(text) {
         return "<div class='loading-content'><div class='loading-symbol'>"
         + "<div class='spinner-grow loading-spinner'></div>"
-        + "</div><div class='loading-text'>"+ this.translator.t('loading.text') +"</div></div>";
+        + "</div><div class='loading-text'>"+ this.translator.t(text) +"</div></div>";
     },
     appendLoading: function(loadingName) {
         var loading = this.findLoadingByName(loadingName);
-        loading.el.insertAdjacentHTML('afterbegin', this.getTemplate());
+        loading.el.insertAdjacentHTML('afterbegin', this.getTemplate(loading.text));
 
         if (loading.selector !== this.defaultLocation) {
             var elLoading = loading.el.children[0];
@@ -40,19 +41,28 @@ export default {
             }
         }
     },
-    start: function(loadingName, selector) {
+    start: function(loadingName, selector, text) {
         if (this.translator === null) {
             this.translator = this.app.$i18n;
         }
 
-        if (selector === undefined) {
+        var currentLoading = document.querySelector('.loading-content');
+        if (currentLoading) {
+            currentLoading.remove();
+            this.clean()
+        }
+        
+        if (selector === undefined || selector === null) {
             selector = this.defaultLocation;
         }
+
+        text = text === undefined ? this.textPrefix + 'default' : this.textPrefix + text;
 
         this.loadingElements.push({
             selector: selector,
             el: document.querySelector(selector),
             name: loadingName,
+            text: text
         });
 
         this.appendLoading(loadingName);

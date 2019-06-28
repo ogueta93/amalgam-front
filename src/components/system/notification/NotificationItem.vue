@@ -103,7 +103,7 @@ export default {
                 battleId: this.data.battleId
             };
             var callback = function(response) {
-                that.$router.push('/game/battle/' + response.id);
+                that.$router.push({path: `/game/battle/${response.id}`});
             };
 
             this.$webSocket.sendComplexAction(ACTION.ACCEPT_BATTLE_ACTION, eventIdentificator, data, callback);

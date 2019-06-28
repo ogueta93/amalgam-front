@@ -1,4 +1,15 @@
 {
+    "battleAnnouncement": {
+        "messages": {
+            "coinThrow1": "{nickName}, the battle is going to start",
+            "coinThrow2": "This time you are...",
+            "coinThrow3A": "Blue",
+            "coinThrow3B": "Red",
+            "coinThrow4A": "This time you are first to go",
+            "coinThrow4B": "This time you are second to go",
+            "coinThrow5": "{nickName}, good lock and have fun"
+        }
+    },
     "cardType": {
         "none": "None",
         "common": "Common",
@@ -27,7 +38,10 @@
     },
 
     "loading": {
-        "text": "Loading"
+        "messages": {
+            "default": "Loading",
+            "resumeSelectionLoadingMsg": "Please, wait the cards selection of your rival"
+        }
     },
 
     "message": "hello i18n !!",

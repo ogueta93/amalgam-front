@@ -46,7 +46,6 @@
 import BATTLE_TYPE from '@/constants/BattleType';
 import ACTION from '@/constants/Action';
 import EVENT from '@/constants/Event';
-import LOADING from '@/constants/Loading';
 
 export default {
     name : 'resumeSelectionComponent',
@@ -68,8 +67,6 @@ export default {
     },
     methods: {
         setCardsSelection: function() {
-            this.$loading.start(LOADING.RESUME_SELECTION_LOADING);
-
             var data = {
                 battleId: this.$battle.getId(),
                 cardsSelected: this.cardsSelected
