@@ -10,5 +10,6 @@ export default {
     NOTIFICATION_ACTION: 'gameNotification',
     REFUSE_BATTLE_ACTION: 'refuseBattle',
 
-    SET_CARDS_SELECTION: 'setCardsSelection'
+    SET_CARDS_SELECTION: 'setCardsSelection',
+    SHOW_THROW_ANNOUNCEMENT: 'showThrowAnnouncement'
 }

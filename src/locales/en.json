@@ -5,9 +5,9 @@
             "coinThrow2": "This time you are...",
             "coinThrow3A": "Blue",
             "coinThrow3B": "Red",
-            "coinThrow4A": "This time you are first to go",
-            "coinThrow4B": "This time you are second to go",
-            "coinThrow5": "{nickName}, good lock and have fun"
+            "coinThrow4A": "You are first to go",
+            "coinThrow4B": "You are second to go",
+            "coinThrow5": "{nickName}, good luck and have fun"
         }
     },
     "cardType": {
@@ -40,7 +40,8 @@
     "loading": {
         "messages": {
             "default": "Loading",
-            "resumeSelectionLoadingMsg": "Please, wait the cards selection of your rival"
+            "resumeSelectionLoadingMsg": "Please, wait the cards selection of your rival",
+            "coinThrowLoadingMsg": "Please, wait your rival's preparation. The battle is going to start soon."
         }
     },
 

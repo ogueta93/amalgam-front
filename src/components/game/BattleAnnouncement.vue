@@ -6,6 +6,7 @@
 
 <script>
 import ANNOUNCEMENT from '@/constants/Announcement';
+import ACTION from '@/constants/Action';
 
 export default {
     name : 'battleAnnouncementomponent',
@@ -25,7 +26,8 @@ export default {
             textPrefix: 'battleAnnouncement.messages.',
             msg: null,
             animationClass: null,
-            steps: []
+            steps: [],
+            animationCallBack: null
         }
     },
     mounted: function() {
@@ -59,7 +61,12 @@ export default {
                 {msg: that.$i18n.t(that.textPrefix + 'coinThrow4' + turn), class: 'coinThrow4' + turn},
                 {msg: that.$i18n.t(that.textPrefix + 'coinThrow5', {nickName: user.nickName}), class: 'coinThrow5'}
             ];
+
+            this.animationCallBack  = function() {
+                that.$webSocket.sendAction(ACTION.SHOW_THROW_ANNOUNCEMENT, {battleId: that.$battle.getId()});
+            };
         },
+
         start: function() {
             this.msg = this.animationClass = null;
             this.nextTick();
@@ -95,6 +102,8 @@ export default {
                         that.$nextTick(function() {
                             that.nextTick(++numTick);
                         });
+                    } else {
+                        that.animationCallBack();
                     }
                 });
             });

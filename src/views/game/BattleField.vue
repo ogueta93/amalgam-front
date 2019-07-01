@@ -8,8 +8,11 @@
                 <deck :battlePhase="battlePhase"></deck>
             </div>
         </div>
-        <div v-if="battlePhase === BATTLE_PHASE.COIN_THROW_PHASE" class="battle-field-coin-throw">
+        <div v-if="battlePhase === BATTLE_PHASE.COIN_THROW_PHASE && !userShowColor" class="battle-field-coin-throw">
             <battleAnnouncement :announcement="ANNOUNCEMENT.COIN_THROW" :extra="{initialTurn: initialTurn}"></battleAnnouncement>
+        </div>
+        <div v-if="battlePhase === BATTLE_PHASE.BATTLE_PHASE">
+            LOAD BATTLE ARENA MODULE
         </div>
     </div>
 </template>
@@ -42,16 +45,19 @@ export default {
             battlePhase: null,
             cardsSelected: [],
             initialTurn: null,
+            userShowColor: false
         }
     },
     mounted: function() {
         /** Initial module instance */
         this.$webSocket.setEvent(ACTION.SET_CARDS_SELECTION, this.$options.name, this.callBackFindBattle);
+        this.$webSocket.setEvent(ACTION.SHOW_THROW_ANNOUNCEMENT, null, this.callBackFindBattle);
 
         this.findBattle();
     },
     destroyed: function() {
         this.$webSocket.$wsOff(ACTION.SET_CARDS_SELECTION, this.$options.name);
+        this.$webSocket.$wsOff(ACTION.SHOW_THROW_ANNOUNCEMENT);
     },
     updated: function() {
         /** after render */
@@ -77,6 +83,7 @@ export default {
             this.battlePhase = this.$battle.getPhase();
             this.cardsSelected = this.$battle.getCardsSelected(this.userId);
             this.initialTurn = this.$battle.getInitialTurn(this.userId);
+            this.userShowColor = this.$battle.checkUserShowColor(this.userId);
 
             this.callPhaseEvents();
         },
@@ -84,12 +91,17 @@ export default {
             switch (this.battlePhase) {
                 case BATTLE_PHASE.CARD_SELECTION_PHASE:
                     if (this.cardsSelected.length) {
-                        this.$loading.start(LOADING.RESUME_SELECTION_LOADING, '.battle-field', LOADING.RESUME_SELECTION_LOADING_MSG)
+                        this.$loading.start(LOADING.RESUME_SELECTION_LOADING, '.battle-field', LOADING.RESUME_SELECTION_LOADING_MSG);
                     }
                     break;
                 case BATTLE_PHASE.COIN_THROW_PHASE:
-                    this.$loading.end(LOADING.RESUME_SELECTION_LOADING)
+                    this.$loading.end(LOADING.RESUME_SELECTION_LOADING);
+                    if (this.userShowColor) {
+                        this.$loading.start(LOADING.COIN_THROW_LOADING, '.battle-field', LOADING.COIN_THROW_LOADING_MSG);
+                    }
                     break;
+                case BATTLE_PHASE.BATTLE_PHASE:
+                    this.$loading.end(LOADING.COIN_THROW_LOADING);
                 default:
                     break;
             }

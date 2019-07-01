@@ -42,5 +42,16 @@ export default {
         });
 
         return initialTurn;
+    },
+    checkUserShowColor: function(userId) {
+        if (this.data.progress.main.cointThrow === undefined) {
+            return false;
+        }
+
+        var userShowColor = this.data.progress.main.cointThrow.filter(function(obj){
+            return (obj.userId === userId) && obj.checked;
+        });
+
+        return userShowColor.length ? true : false;
     }
 }
