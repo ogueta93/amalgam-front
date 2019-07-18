@@ -7,7 +7,12 @@
             "coinThrow3B": "Red",
             "coinThrow4A": "You are first to go",
             "coinThrow4B": "You are second to go",
-            "coinThrow5": "{nickName}, good luck and have fun"
+            "coinThrow5": "{nickName}, good luck and have fun",
+
+            "turnStarted": "{nickName}'s turn has started",
+            "battleResult-draw": "Draw",
+            "battleResult-winner": "You win",
+            "battleResult-loser": "You lose"
         }
     },
     "cardType": {

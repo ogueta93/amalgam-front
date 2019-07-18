@@ -74,10 +74,8 @@ export default {
         },
         callBackLogin: function(response, error) {
             if (error) {
-                alert('ERROR');
                 console.log('Error', response);
             } else {
-               console.log('Good', response);
                this.$router.push('/game');
             }
         },

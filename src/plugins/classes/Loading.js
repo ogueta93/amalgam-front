@@ -13,13 +13,17 @@ export default {
     },
     appendLoading: function(loadingName) {
         var loading = this.findLoadingByName(loadingName);
-        loading.el.insertAdjacentHTML('afterbegin', this.getTemplate(loading.text));
 
-        if (loading.selector !== this.defaultLocation) {
-            var elLoading = loading.el.children[0];
+        var target = document.querySelector(loading.selector);
+        if (target) {
+            target.insertAdjacentHTML('afterbegin', this.getTemplate(loading.text));
+        }
 
-            elLoading.style.height = loading.el.offsetHeight.toString() + 'px';
-            elLoading.style.width = loading.el.offsetWidth.toString() + 'px';
+        if (target && (loading.selector !== this.defaultLocation)) {
+            var elLoading = target.children[0];
+
+            elLoading.style.height = target.offsetHeight.toString() + 'px';
+            elLoading.style.width = target.offsetWidth.toString() + 'px';
             elLoading.style.zIndex = 1;
         }  
     },
@@ -48,7 +52,6 @@ export default {
 
         var currentLoading = document.querySelector('.loading-content');
         if (currentLoading) {
-            currentLoading.remove();
             this.clean()
         }
         
@@ -60,7 +63,6 @@ export default {
 
         this.loadingElements.push({
             selector: selector,
-            el: document.querySelector(selector),
             name: loadingName,
             text: text
         });
@@ -71,7 +73,8 @@ export default {
         var loading = this.findLoadingByName(loadingName);
 
         if (loading) {
-            loading.el.querySelector('.loading-content').remove();
+            var target = document.querySelector(loading.selector);
+            target.querySelector('.loading-content').remove();
         }
 
         this.removeLoadingByName(loadingName);

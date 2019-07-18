@@ -67,44 +67,44 @@ export default {
 /* notification customization */
 $notification-counter-background-color: #1a73e8;
 
-    .notification-system {
-        position: absolute;
-        right: 0;
-        top: 0;
-        height: auto;
-        width: 30%;
-        z-index: 2;
+.notification-system {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: auto;
+    width: 30%;
+    z-index: 3;
 
-        .notification-content {
-            display: flex;
-            width: 100%;
-            flex-direction: column-reverse;
-            flex-shrink: 0;
-            padding: 0 10px 0 10px;
-        }
-
-        .notification-counter {
-            display: flex;
-            width: 100%;
-            flex-direction: row;
-            justify-content: center;
-
-            .notification-counter-number {
-                display: flex;
-                height: 50px;
-                width: 50px;
-                align-items: center;
-                justify-content: center;
-                margin: 20px 0 0 0;
-                border-radius: 25px;
-                background: $notification-counter-background-color;
-                color: white;
-                font-size: 1.2em;
-                font-family: 'Audiowide', cursive;
-                box-shadow: 0 12px 5px -8px rgba(0, 0, 0, 0.6);
-            }
-        }
-        
+    .notification-content {
+        display: flex;
+        width: 100%;
+        flex-direction: column-reverse;
+        flex-shrink: 0;
+        padding: 0 10px 0 10px;
     }
+
+    .notification-counter {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+
+        .notification-counter-number {
+            display: flex;
+            height: 50px;
+            width: 50px;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0 0 0;
+            border-radius: 25px;
+            background: $notification-counter-background-color;
+            color: white;
+            font-size: 1.2em;
+            font-family: 'Audiowide', cursive;
+            box-shadow: 0 12px 5px -8px rgba(0, 0, 0, 0.6);
+        }
+    }
+    
+}
 /* END notification customization */
 </style>

@@ -1,3 +1,5 @@
 export default {
-    COIN_THROW: 'coinThrow'
+    BATTLE_RESULT: 'battleResult',
+    COIN_THROW: 'coinThrow',
+    TURN_STARTED: 'turnStarted'
 }

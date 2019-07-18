@@ -11,8 +11,8 @@
         <div v-if="battlePhase === BATTLE_PHASE.COIN_THROW_PHASE && !userShowColor" class="battle-field-coin-throw">
             <battleAnnouncement :announcement="ANNOUNCEMENT.COIN_THROW" :extra="{initialTurn: initialTurn}"></battleAnnouncement>
         </div>
-        <div v-if="battlePhase === BATTLE_PHASE.BATTLE_PHASE">
-            LOAD BATTLE ARENA MODULE
+        <div v-if="battlePhase === BATTLE_PHASE.BATTLE_PHASE"  class="battle-field-battle-arena">
+            <battleArena :battleData="data"></battleArena>
         </div>
     </div>
 </template>
@@ -26,13 +26,15 @@ import ANNOUNCEMENT from '@/constants/Announcement';
 import deck from '@/components/game/Deck';
 import resumeSelection from '@/components/game/ResumeSelection';
 import battleAnnouncement from '@/components/game/BattleAnnouncement';
+import battleArena from '@/components/game/BattleArena';
 
 export default {
     name : 'battleFieldView',
     components: {
         deck,
         resumeSelection,
-        battleAnnouncement
+        battleAnnouncement,
+        battleArena
     },
     data() {
         return {
@@ -102,6 +104,7 @@ export default {
                     break;
                 case BATTLE_PHASE.BATTLE_PHASE:
                     this.$loading.end(LOADING.COIN_THROW_LOADING);
+                    break;
                 default:
                     break;
             }
@@ -145,6 +148,11 @@ export default {
         width: 100%;
         align-items: center;
         justify-content: center;
+    }
+
+    .battle-field-battle-arena {
+        height: 100%;
+        width: 100%;
     }
 }
 /* End battleFieldView customization */

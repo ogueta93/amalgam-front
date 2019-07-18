@@ -7,6 +7,7 @@
 <script>
 import ANNOUNCEMENT from '@/constants/Announcement';
 import ACTION from '@/constants/Action';
+import EVENT from '@/constants/Event';
 
 export default {
     name : 'battleAnnouncementomponent',
@@ -43,6 +44,12 @@ export default {
                 case ANNOUNCEMENT.COIN_THROW:
                     this.setCointThrowAnnouncement();
                     break;
+                case ANNOUNCEMENT.TURN_STARTED:
+                    this.setTurnStartedAnnouncement();
+                    break;
+                case ANNOUNCEMENT.BATTLE_RESULT:
+                    this.setBattleResultAnnouncement();
+                    break;
                 default:
                     break;
             }
@@ -52,7 +59,7 @@ export default {
             
             var announcement = this.announcement;
             var turn = this.extra.initialTurn === 1 ? 'A' : 'B';
-            var user =  this.$localStorage.getUser();
+            var user = this.$localStorage.getUser();
 
             this.steps = [
                 {msg: that.$i18n.t(that.textPrefix + 'coinThrow1', {nickName: user.nickName}), class: 'coinThrow1'},
@@ -62,11 +69,35 @@ export default {
                 {msg: that.$i18n.t(that.textPrefix + 'coinThrow5', {nickName: user.nickName}), class: 'coinThrow5'}
             ];
 
-            this.animationCallBack  = function() {
+            this.animationCallBack = function() {
                 that.$webSocket.sendAction(ACTION.SHOW_THROW_ANNOUNCEMENT, {battleId: that.$battle.getId()});
             };
         },
+        setTurnStartedAnnouncement: function() {
+            var that = this; 
 
+            var customClass = this.announcement + "-" + this.extra.color;
+            this.steps = [
+                {msg: that.$i18n.t(that.textPrefix + this.announcement, {nickName: this.extra.nickName}), class: customClass},
+            ];
+
+            this.animationCallBack  = function() {
+                that.$root.$emit(EVENT.BATTLE_ANNOUNCEMENT_END);
+            };
+        },
+        setBattleResultAnnouncement: function() {
+            var that = this;
+
+            var customClass = this.announcement + "-" + this.extra.result;
+            var translation = this.textPrefix + this.announcement + "-" + this.extra.result;
+            this.steps = [
+                {msg: that.$i18n.t(translation), class: customClass},
+            ];
+
+            this.animationCallBack  = function() {
+                that.$root.$emit(EVENT.BATTLE_ANNOUNCEMENT_END);
+            };
+        },
         start: function() {
             this.msg = this.animationClass = null;
             this.nextTick();
@@ -103,7 +134,9 @@ export default {
                             that.nextTick(++numTick);
                         });
                     } else {
-                        that.animationCallBack();
+                        if (that.animationCallBack instanceof Function) {
+                            that.animationCallBack();
+                        }
                     }
                 });
             });
@@ -113,9 +146,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* Deck customization */
+/* BattleAnnouncement customization */
 $primary-gradient-color: #1a73e8;
 $secondary-gradient-color: #e8391a;
+$winner-gradient-color: #1fd88b;
 
 .battle-announcement-content {
     display: flex;
@@ -129,6 +163,7 @@ $secondary-gradient-color: #e8391a;
         font-family: 'Audiowide', cursive;
         text-transform: uppercase;
         font-size: 3.5em;
+        text-align: center;
         letter-spacing: 4px;
         background: linear-gradient(90deg, black, #fff, black);
         color: rgba(255, 255, 255, 0);
@@ -185,6 +220,41 @@ $secondary-gradient-color: #e8391a;
             background-repeat: no-repeat;
             animation: animate 5s linear;
         }
+
+        &.turnStarted-primary {
+            background: linear-gradient(90deg, $primary-gradient-color, #fff, $primary-gradient-color);
+            background-size: 70%;
+            background-clip: text;
+            background-repeat: no-repeat;
+            animation: animate 3s linear;
+        }
+        &.turnStarted-secondary {
+            background: linear-gradient(90deg, $secondary-gradient-color, #fff, $secondary-gradient-color);
+            background-size: 70%;
+            background-clip: text;
+            background-repeat: no-repeat;
+            animation: animate 3s linear;
+        }
+        &.battleResult-draw {
+            background-size: 70%;
+            background-clip: text;
+            background-repeat: no-repeat;
+            animation: animate 2s linear;
+        }
+        &.battleResult-winner {
+            background: linear-gradient(90deg, $winner-gradient-color, #fff, $winner-gradient-color);
+            background-size: 70%;
+            background-clip: text;
+            background-repeat: no-repeat;
+            animation: animate 2s linear;
+        }
+        &.battleResult-loser {
+            background: linear-gradient(90deg, $secondary-gradient-color, #fff, $secondary-gradient-color);
+            background-size: 70%;
+            background-clip: text;
+            background-repeat: no-repeat;
+            animation: animate 2s linear;
+        }
     }
 }
 
@@ -196,5 +266,5 @@ $secondary-gradient-color: #e8391a;
         background-position: 400%;
     }
 }
-/* End Deck customization */
+/* End BattleAnnouncement customization */
 </style>

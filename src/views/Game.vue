@@ -36,9 +36,6 @@ export default {
     mounted: function()
     {
         /** Initial module instance */
-        this.$root.$on('newBattleNotification', function(response){
-            console.log('NEW BATTLE NOTIFICATION', response);
-        });
     },
     updated: function()
     {

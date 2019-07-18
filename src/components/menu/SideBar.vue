@@ -105,7 +105,7 @@ export default {
 .sidebar-game {
     position: absolute;
     left: -250px;
-    z-index: 2;
+    z-index: 3;
     height: 100%;
     width: 250px;
     transition: left .25s ease-out;
