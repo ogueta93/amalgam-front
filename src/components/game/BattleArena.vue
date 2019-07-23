@@ -22,7 +22,7 @@
             {{rivalCapturedCount}}
         </div>
         <div v-if="rivalCards.length" class="battle-rival-deck">
-            <gameCard v-for="card in rivalCards" :key="card.userCardId" :card="card" :battlePhase="battlePhase"></gameCard>
+            <gameCard v-for="card in rivalCards" :key="card.userCardId" :card="card" :faceDown="true"></gameCard>
         </div>
     </div>
 </template>

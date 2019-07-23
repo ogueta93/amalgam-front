@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <div v-if="!faceDown" 
     :class="['game-card ' + card.type.name, cardBattleColorClass, {selected: card.selected}, {'selected-in-battle': card.selectedInbattle}, 
     {battleCard: battleCardClass}, {'playable-card': isPlayableCard}, {'recently-placed': card.recentlyPlaced}, {'recentlyCaptured': card.recentlyCaptured}]" 
     @click="cardAction">
@@ -18,10 +18,21 @@
                 <div class="game-card-body-bottom">{{card.bottom}}</div>
             </div>
         </div>
+        <div v-if="debug" class="debug">
+            <div class="add-button" @click="debubAddCard(card.id)">
+                <i class="fas fa-plus add-caracter"></i>
+                <i class="fas fa-check check-caracter"></i>
+            </div>
+        </div>
+    </div>
+    <div v-else :class="['game-card common', cardBattleColorClass, {battleCard: battleCardClass}]">
+       <div class="game-card-content">
+        </div>
     </div>
 </template>
 
 <script>
+import ACTION from '@/constants/Action';
 import EVENT from '@/constants/Event';
 import BATTLE_PHASE from '@/constants/BattlePhase';
 
@@ -36,7 +47,16 @@ export default {
             type: Number,
             required: false
         },
+        faceDown: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
         inBoard: {
+            type: Boolean,
+            required: false
+        },
+        debug: {
             type: Boolean,
             required: false
         }
@@ -47,17 +67,22 @@ export default {
             cardBattleColorClass: null,
             hiddenHeaderClass: false,
             battleCardClass: false,
-            isPlayableCard: false
+            isPlayableCard: false,
+            debugAddingCard: false
         }
     },
     mounted: function() {
         /** Initial module instance */
-        if (this.battlePhase === BATTLE_PHASE.BATTLE_PHASE) {
+        if (this.battlePhase === BATTLE_PHASE.BATTLE_PHASE && !this.faceDown) {
             this.playerInfo = this.$battle.getPlayerOwnership(this.card.userCardId);
 
             this.cardBattleColorClass = this.getCardBattleColor();
             this.isPlayableCard = this.getCardOwnership() && !this.inBoard;
             this.hiddenHeaderClass = true;
+            this.battleCardClass = true;
+        }
+        else if (this.faceDown) {
+            this.cardBattleColorClass = this.getCardBattleColorWithOutRefence();
             this.battleCardClass = true;
         }
     },
@@ -77,6 +102,17 @@ export default {
             if (this.battlePhase === BATTLE_PHASE.BATTLE_PHASE) {
                 this.playCard();
             }
+        },
+        debubAddCard: function(id) {
+            if (this.debugAddingCard) {
+                return;
+            }
+            this.debugAddingCard = true;
+
+            var data = {
+                id: this.card.id
+            };
+            this.$webSocket.sendComplexAction(ACTION.DEBUG_ADD_CARD_ACTION, this.$options.name, data, this.callBackDebugAddCard);
         },
         setToplay: function() {
             this.card.selected = !this.card.selected;
@@ -99,8 +135,30 @@ export default {
                 return 'secondary';
             }
         },
+        getCardBattleColorWithOutRefence: function() {
+            var hostUserId = this.$localStorage.getUser().id;
+            var hostPlayerTurn = this.$battle.getInitialTurn(hostUserId);
+
+            if (hostPlayerTurn === 1) {
+                return 'secondary';
+            } else {
+                return 'primary';
+            }
+        },
         getCardOwnership: function() {
             return this.playerInfo.id === this.$localStorage.getUser().id;
+        },
+
+        callBackDebugAddCard: function(response) {
+            var that = this;
+
+            var addButton = this.$el.querySelector('.add-button');
+            addButton.classList.add('success-adding');
+
+            addButton.addEventListener('animationend', function() {
+                addButton.classList.remove('success-adding');
+                that.debugAddingCard = false;
+            });            
         }
     }
 };
@@ -117,7 +175,11 @@ $primary-battle-color: #508cda;
 $secondary-battle-color: #ea4d32;
 $common-card-color: #5a4646;
 
+$add-button-color: #508cda;
+$add-button-success-color: #3cbd82;
+
 .game-card {
+    position: relative;
     width: 125px;
     height: 175px;
     padding: 5px;
@@ -222,6 +284,67 @@ $common-card-color: #5a4646;
         }
     }
 
+    .debug {
+        position: absolute;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        top:0;
+        left: 0;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        cursor: default;
+        overflow: hidden;
+        opacity:0;
+        transition: opacity 0.3s ease-out;
+
+        &:hover {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .add-button {
+            display: flex;
+            height: 30px;
+            width: 30px;
+            align-items: center;
+            justify-content: center;
+            padding: 2px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+
+            .add-caracter {
+                display: none;
+            }
+
+            .check-caracter {
+                display: none;
+            }
+
+            &:hover {
+                transform: scale(1.5);
+            }
+
+            &:not(.success-adding) {
+                background-color: $add-button-color;
+
+                .add-caracter {
+                    display: block;
+                }
+            }
+
+            &.success-adding {
+                animation: success-adding-debug 0.5s linear;
+
+                .check-caracter {
+                    display: block;
+                }
+            }
+        }
+    }
+
     &.primary {
         .game-card-content{
             background: $primary-battle-color !important;
@@ -249,6 +372,11 @@ $common-card-color: #5a4646;
             background: $common-card-color;
         }
     }
+}
+
+@keyframes success-adding-debug {
+    from {background-color: $add-button-color;}
+    to {background-color: $add-button-success-color;}
 }
 
 @keyframes recentlyPlaced {

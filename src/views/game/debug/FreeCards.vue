@@ -1,14 +1,14 @@
 <template>
-    <deck></deck>
+    <freeCards></freeCards>
 </template>
 
 <script>
-import deck from '@/components/game/Deck';
+import freeCards from '@/components/game/debug/FreeCards';
 
 export default {
-    name : 'deckView',
+    name : 'freeCardsView',
     components: {
-        deck
+        freeCards
     },
     data() {
         return {
@@ -24,7 +24,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* DeckView customization */
+/* FreeCardsView customization */
 
-/* End DeckView customization */
+/* End FreeCardsView customization */
 </style>

@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* BattleChamber customization */
+/* BattleChamberView customization */
     .battle-chamber {
         display: flex;
         height: 100%;
@@ -56,5 +56,5 @@ export default {
         }
     }
 
-/* End BattleChamber customization */
+/* End BattleChamberView customization */
 </style>

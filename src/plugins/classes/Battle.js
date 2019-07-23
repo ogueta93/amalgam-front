@@ -130,6 +130,16 @@ export default {
                }
             });
         });
+        if (userId === null) {
+            this.data.progress.battleField.board.forEach(function(row) {
+                row.forEach(function(field) {
+                    if (field.card !== undefined && field.card.userCardId === userCardId) {
+                        userId = field.userId
+                        return;
+                    }
+                });
+            });
+        }
 
         var user = this.data.users.filter(function(obj) {
             return obj.user.id === userId;

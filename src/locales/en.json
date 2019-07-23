@@ -29,6 +29,12 @@
         "deckTitle": "Deck"
     },
 
+    "freeCards": {
+        "cardNameFilter": "Card Name",
+        "cardTypeFilter": "Types",
+        "title": "Debug: Free Cards"
+    },
+
     "error": {
         "errorButton": "Accept",
         "errorTitle": "Error",
@@ -37,8 +43,9 @@
             "actionDoesNotExists": "The action not exist",
             "battleDeckSelectionLimit": "Can not choose more than five cards",
             "invalidCredentials": "The credentials entered are invalid",
+            "notValidDataOnWsService": "The data sended in the service is not valid",
             "noValidToken": "The token is expired or is not valid",
-            "notValidDataOnWsService": "The data sended in the service is not valid"
+            "notValidRights": "You don't have the rights"
         }
     },
 
@@ -63,6 +70,14 @@
     "resumeSelection": {
         "headerTitle": "Your Card Selection",
         "acceptSelectionButton": "Accept Selection"
+    },
+
+    "sidebar": {
+        "battleChamber": "Battle Chamber",
+        "deck": "Deck",
+        "home": "Home",
+        "nook": "Your Nook",
+        "simpleMatch": "Simple Match"
     },
 
     "userFinder": {
