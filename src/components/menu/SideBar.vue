@@ -5,18 +5,20 @@
                 <p>Dummy Heading</p>
                 
                 <li v-for="item in data" :key="item.id">
-                    <template v-if="!item.childs">
-                        <a :data-href="item.href" @click="goTo(item.href)">{{item.name}}</a>
-                    </template>
-                    <template v-else>
-                        <a v-b-toggle="'menu-toggle-' + item.id" class="dropdown-toggle" :data-href="item.href" @click="goTo(item.href)">{{item.name}}</a>
-                        <b-collapse :id="'menu-toggle-'+item.id">
-                            <ul class="list-unstyled">
-                                <li v-for="child in item.childs" :key="child.id">
-                                    <a :data-href="child.href" @click="goTo(child.href)">{{child.name}}</a>
-                                </li>
-                            </ul>
-                        </b-collapse>
+                    <template v-if="!item.debug || (isDevEnvironment && item.debug)">
+                        <template v-if="!item.childs">
+                        <a :data-href="item.href" @click="goTo(item.href)">{{$t(item.name)}}</a>
+                        </template>
+                        <template v-else>
+                            <a v-b-toggle="'menu-toggle-' + item.id" class="dropdown-toggle" :data-href="item.href" @click="goTo(item.href)">{{$t(item.name)}}</a>
+                            <b-collapse :id="'menu-toggle-'+item.id">
+                                <ul class="list-unstyled">
+                                    <li v-for="child in item.childs" :key="child.id">
+                                        <a :data-href="child.href" @click="goTo(child.href)">{{$t(child.name)}}</a>
+                                    </li>
+                                </ul>
+                            </b-collapse>
+                        </template>
                     </template>
                 </li>
             </ul>
@@ -44,6 +46,7 @@ export default {
     name : 'sidebar',
     data() {
         return {
+            isDevEnvironment: process.env.VUE_APP_ENVIRONMENT === 'dev' ? true : false,
             active: null,
             data: sideBarContent
         }

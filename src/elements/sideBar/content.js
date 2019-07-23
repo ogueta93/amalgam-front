@@ -1,31 +1,44 @@
 export default [
     {
         id: 1,
-        name: 'Home',
+        name: 'sidebar.home',
         href: '/game'
     },
     {
         id: 2,
-        name: 'Battle Chamber',
+        name: 'sidebar.battleChamber',
         href: null,
         childs: [
             {
                 id: 1,
-                name: 'Simple Battle',
+                name: 'sidebar.simpleMatch',
                 href: '/game/bchamber/simpleMatch'
             }
         ]
     },
     {
         id: 3,
-        name: 'Your Nook',
+        name: 'sidebar.nook',
         href: null,
         childs: [
             {
                 id: 1,
-                name: 'Deck',
+                name: 'sidebar.deck',
                 href: '/game/deck'
             }
         ]
     },
+    {
+        id: 4,
+        name: 'Debug',
+        href: null,
+        debug: true,
+        childs: [
+            {
+                id: 1,
+                name: 'Free Cards',
+                href: '/game/debug/freeCards'
+            }
+        ]
+    }
 ]

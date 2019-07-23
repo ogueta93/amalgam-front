@@ -2,6 +2,9 @@ export default {
     ACCEPT_BATTLE_ACTION: 'acceptBattle',
     BATTLE_MOVEMENT_ACTION: 'battleMovement',
 
+    DEBUG_ADD_CARD_ACTION: 'addCard',
+
+    GET_GAME_CARDS_ACTION: 'getGameCards',
     GET_USERS_ACTION: 'getUsers',
     GET_USER_BATTLE_LIST_ACTION: 'getUserBattleList',
     GET_USER_CARDS_ACTION: 'getUserCards',
