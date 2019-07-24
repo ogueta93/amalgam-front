@@ -1,6 +1,5 @@
 <template>
-  <div class="animated fadeIn">
-      {{ $t("message") }}
+  <div>
   </div>
 </template>
 

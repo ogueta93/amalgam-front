@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 /** Views */
 import login from '@/views/Login.vue';
 
@@ -10,6 +12,9 @@ import bfield from '@/views/game/BattleField';
 
 /** Debug */
 import freeCards from '@/views/game/debug/FreeCards';
+
+/** Constants */
+import ACTION from '@/constants/Action';
 
 const routes = [
     { 
