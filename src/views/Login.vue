@@ -1,59 +1,35 @@
 <template>
-  <div class="app flex-row align-items-center">
-    <div class="container">
-      <b-row class="justify-content-center">
-        <b-col md="8">
-          <b-card-group>
-            <b-card no-body class="p-4">
-              <b-card-body>
-                <b-form v-on:submit.prevent="submitLogin">
-                  <h1>Login</h1>
-                  <p class="text-muted">Sign In to your account</p>
-                  <b-input-group class="mb-3">
-                    <b-input-group-prepend><b-input-group-text><i class="fas fa-envelope"></i></b-input-group-text></b-input-group-prepend>
-                    <b-form-input type="email" class="form-control" placeholder="Username" autocomplete="username email" id="email" v-model="email" required/>
-                  </b-input-group>
-                  <b-input-group class="mb-4">
-                    <b-input-group-prepend><b-input-group-text><i class="fas fa-key"></i></b-input-group-text></b-input-group-prepend>
-                    <b-form-input type="password" class="form-control" placeholder="Password" autocomplete="current-password" id="password" v-model="password" required/>
-                  </b-input-group>
-                  <b-row>
-                    <b-col cols="6">
-                      <b-button type="submit" variant="primary" class="px-4">Login</b-button>
-                    </b-col>
-                    <b-col cols="6" class="text-right">
-                      <b-button variant="link" class="px-0">Forgot password?</b-button>
-                    </b-col>
-                  </b-row>
-                </b-form>
-              </b-card-body>
-            </b-card>
-            <b-card no-body class="text-white bg-primary py-5 d-md-down-none" style="width:44%">
-              <b-card-body class="text-center">
-                <div>
-                  <h2>Sign up</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  <b-button variant="primary" class="active mt-3">Register Now!</b-button>
-                </div>
-              </b-card-body>
-            </b-card>
-          </b-card-group>
-        </b-col>
-      </b-row>
+    <div class="login-view-container">
+        <div class="login-register-container">
+            <div class="login-register-buttons">
+                <div :class="['button-container', {active: loginActive}]" @click="changeForm($event)">
+                    {{$t('loginView.login')}}
+                </div> 
+                <div :class="['button-container', {active: !loginActive}]" @click="changeForm($event)">
+                    {{$t('loginView.register')}}
+                </div> 
+            </div>
+            <div class="login-register-content">
+                <login :visible="loginActive"></login>
+                <register :visible="!loginActive"></register>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-
-import ACTION from '@/constants/Action';
+import login from '@/components/login/Login';
+import register from '@/components/login/Register';
 
 export default {
     name : 'loginView',
+    components: {
+        login,
+        register
+    },
     data() {
         return {
-            email : null,
-            password : null
+            loginActive: true
         }
     },
     mounted: function() {
@@ -64,21 +40,80 @@ export default {
         /** after render */
     },
     methods: {
-        submitLogin: function() {
-            var data = {
-                email: this.email,
-                password: this.password
-            };
-            
-            this.$webSocket.sendComplexAction(ACTION.LOGIN_ACTION, this.$options.name, data, this.callBackLogin);
-        },
-        callBackLogin: function(response, error) {
-            if (error) {
-                console.log('Error', response);
-            } else {
-               this.$router.push('/game');
+        changeForm: function(event) {
+            if (event.target.classList.contains('active')) {
+                return false;
             }
-        },
+
+            this.loginActive = !this.loginActive;
+        }
     }
 };
 </script>
+
+<style lang="scss" scoped>
+/* LoginView customization */
+$login-register-background-color: #f0f3f5;
+$login-register-background-shadow: 0 4px 10px 4px  rgba(0, 0, 0, 0.3);
+$button-background-color: #1a73e8;
+$button-background-color-inactive: #6597da;
+$button-background-color-hover: #1b5baf;
+
+.login-view-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Audiowide', cursive;
+
+    .login-register-container {
+        display: flex;
+        height: 50%;
+        width: 40%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 40px 0 40px 0;
+        background-color: $login-register-background-color;
+        box-shadow: $login-register-background-shadow;
+
+        .login-register-buttons {
+            display: flex;
+            height: 10%;
+            width: 90%;
+
+            .button-container {
+                display: flex;
+                height: 100%;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                background-color: $button-background-color-inactive;
+                color: white;
+                cursor: default;
+
+                &.active {
+                    background-color: $button-background-color;
+                }
+
+                &:not(.active):hover {
+                    background-color: $button-background-color-hover;
+                }
+
+                &:not(.active){
+                    cursor: pointer;
+                    
+                }
+            }
+        }
+        .login-register-content {
+            display: flex;
+            height: 85%;
+            width: 90%;
+        }
+    }
+}
+
+/* End LoginView customization */
+</style>

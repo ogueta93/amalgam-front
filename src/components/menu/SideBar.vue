@@ -2,7 +2,7 @@
     <div class="sidebar-game active">
         <nav id="sidebar">
             <ul class="list-unstyled components">
-                <p>Dummy Heading</p>
+                <p class="sidebar-title">{{sideBarTitle}}</p>
                 
                 <li v-for="item in data" :key="item.id">
                     <template v-if="!item.debug || (isDevEnvironment && item.debug)">
@@ -46,6 +46,7 @@ export default {
     name : 'sidebar',
     data() {
         return {
+            sideBarTitle: this.$localStorage.getUser().nickName,
             isDevEnvironment: process.env.VUE_APP_ENVIRONMENT === 'dev' ? true : false,
             active: null,
             data: sideBarContent
@@ -118,6 +119,13 @@ export default {
         height: 100%;
         background: #2f353a;
         color: #fff;
+        font-family: 'Audiowide', cursive;
+
+        .sidebar-title {
+            text-align: center;
+            text-transform: capitalize;
+            font-size: 1.2rem;
+        }
 
         ul ul a {
             font-size: 0.7em !important;
@@ -170,7 +178,7 @@ export default {
     }
 
     #sidebar ul li a:hover {
-        background: #20a8d8;
+        background: #158eb9;
     }
 
     #sidebar a[aria-expanded="true"] :not(.active){

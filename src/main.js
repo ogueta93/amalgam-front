@@ -9,7 +9,6 @@ Vue.use(BootstrapVue);
 /** App Components */
 import App from '@/App.vue'
 import Router from '@/router';
-import Config from '@/config';
 
 /** Plugins */
 import WebScoketPlugin from '@/plugins/handlers/WebSocketHandler';
@@ -35,7 +34,6 @@ const vue = new Vue({
 
     data() {
         return {
-            config: Config,
             locale: navigator.languages[0],
             lang: navigator.languages[1],
             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone

@@ -1,13 +1,17 @@
-import EVENT_CONSTANTS from '@/constants/Event';
+import ACTION from '@/constants/Action';
+import EVENT from '@/constants/Event';
+
+const READY_STATE_OPENED = 1;
 
 export default {
     app: null,
     options: null,
 
     socket: null,
-    connected: false,
+    webSocketUrl: process.env.VUE_APP_WEBSOCKET_URL,
+    regexGameRoute: /^\/game/i,
     token: JSON.parse(window.localStorage.getItem('token')),
-    repeatMs: 100,
+    repeatMs: 500,
 
     wsEvents: {},
 
@@ -18,20 +22,46 @@ export default {
     },
 
     start: function() {
-        this.socket = new WebSocket(this.app.config.webSocketUrl);
-
-        this.setSocketLogic();
+        this.socket = new WebSocket(this.webSocketUrl);
+        this.__setSocketLogic();
     },
-    setSocketLogic: function() {
+    checkConnectionStatus: function() {
+        return this.socket && this.socket.readyState === READY_STATE_OPENED;
+    },
+
+    sendAction: function(action, content) {
+        this.__sendWsAction(action, null, content);
+    },
+    sendComplexAction: function(action, name, content, callback, callbackError) {
+        if (!(callback instanceof Function)) {
+            throw 'callback must be a Function';
+        }
+
+        this.__sendWsAction(action, name, content, callback, callbackError);
+    },
+    setEvent: function(action, name, callback, callbackError) {
+        this.$setWsEvent(action, name, callback, callbackError);
+    },
+
+    __setSocketLogic: function() {
         var that = this;
         // Connection opened
-        this.socket.addEventListener('open', function (event) {
-            console.log('Connection start now');
-            that.connected = true;
-        });
+        this.socket.onopen = function(event) {
+            if (that.regexGameRoute.test(that.app.$router.currentRoute.fullPath)) {
+                that.sendAction(ACTION.CHECK_SECURE_CONNECTION_ACTION, {});
+            }
+        };
+
+        this.socket.onclose = function(event) {
+            console.log(this, 'Connection close');
+        };
+
+        this.socket.onerror = function(event) {
+            console.log(this, 'Connection error');
+        };
 
         // Listen for messages
-        this.socket.addEventListener('message', function (event) {
+        this.socket.onmessage = function (event) {
             var data = JSON.parse(atob(event.data));
 
             if (data.t) {
@@ -49,26 +79,15 @@ export default {
             });
 
             console.log('Message from server ', data);
-        });
+        };
     },
-
-    sendAction: function(action, content) {
-        this.sendWsAction(action, null, content);
-    },
-    sendComplexAction: function(action, name, content, callback, callbackError) {
-        if (!(callback instanceof Function)) {
-            throw 'callback must be a Function';
-        }
-
-        this.sendWsAction(action, name, content, callback, callbackError);
-    },
-    sendWsAction: function(action, name, content, callback, callbackError) {
+    __sendWsAction: function(action, name, content, callback, callbackError) {
         var data = {};
         data.a = action;
 
-        if (callback instanceof Function) {
-            this.setWsEvent(action, name, callback, callbackError, true);
-        }
+        var callback = callback || function(){};
+
+        this.$setWsEvent(action, name, callback, callbackError, true);
 
         if (content !== undefined && content instanceof Object) {
             data.c = content;
@@ -82,16 +101,34 @@ export default {
             l: this.app.$root.locale
         };
 
-        if (this.connected) {
-            this.sendMessage(data);
+        this.__processSendMessage(data);
+    },
+    __processSendMessage: function(data) {
+        if (this.checkConnectionStatus()) {
+            this.__sendMessage(data);
         } else {
-            this.trySending(data);
+            this.__trySending(data);
         }
     },
-    setEvent: function(action, name, callback, callbackError) {
-        this.setWsEvent(action, name, callback, callbackError);
+    __sendMessage: function(data) {
+        console.log('message send', data);
+        this.socket.send(this.utils.utoa(JSON.stringify(data)));
     },
-    setWsEvent: function(action, name, callback, callbackError, once) {
+    __trySending: function(data) {
+        var that = this;
+
+        var connectionIntervarl = setInterval(function() {
+            console.log('reconneting', data);
+            if (that.checkConnectionStatus()) {
+                clearInterval(connectionIntervarl);
+                that.__processSendMessage(data);
+            } else {
+                that.start();
+            }
+        }, this.repeatMs);
+    },
+
+    $setWsEvent: function(action, name, callback, callbackError, once) {
         var that = this;
 
         var callbackEvent = function(response, error) {
@@ -101,7 +138,7 @@ export default {
                 } else if (callbackError === true) {
                     callback(response, error);            
                 } else {
-                    that.app.$root.$emit(EVENT_CONSTANTS.ERROR_EVENT, response);
+                    that.app.$root.$emit(EVENT.ERROR_EVENT, response);
                 }
             } else {
                 callback(response, false);
@@ -113,22 +150,6 @@ export default {
         } else {
             this.$wsOn(action, name, callbackEvent);
         }
-    },
-    sendMessage: function(data) {
-        console.log(data);
-        this.socket.send(this.utils.utoa(JSON.stringify(data)));
-    },
-    trySending: function(data) {
-        var that = this;
-
-        var connectionIntervarl = setInterval(function() {
-            console.log('reconneting', data);
-            if (that.connected) {
-                console.log('ok reconnecting', data);
-                that.sendMessage(data);
-                clearInterval(connectionIntervarl);
-            }
-        }, this.repeatMs);
     },
     $wsOn: function(name, identifier, fn) {
         var event = {
