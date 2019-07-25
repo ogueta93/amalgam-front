@@ -171,17 +171,22 @@ $card-border-color: #ffef99;
 $card-selected-color:  rgba(255, 0, 0, 0.8);
 $card-selected-in-battle-color:  rgba(251, 255, 0, 0.8);
 
+
 $primary-battle-color: #508cda;
 $secondary-battle-color: #ea4d32;
 $common-card-color: #5a4646;
+$rare-card-color: #a330bf;
+$legendary-card-color: #D4AF37;
+$legendary-card-text-color: white;
+$legendary-card-border-color: white;
 
 $add-button-color: #508cda;
 $add-button-success-color: #3cbd82;
 
 .game-card {
     position: relative;
-    width: 125px;
-    height: 175px;
+    width: 175px;
+    height: 245px;
     padding: 5px;
     margin: 5px;
     user-select: none;
@@ -227,15 +232,16 @@ $add-button-success-color: #3cbd82;
 
         .game-card-header {
             display: flex;
-            height: 15%;
+            height: 25%;
             width: 100%;
             margin-right: auto;
             padding: 5px;
             border-bottom: 1px solid $card-border-color;
-            font-size: 10px;
+            font-size: 0.5rem;
 
             .game-card-name {
                 margin-right: auto;
+                font-size: 0.7rem;
             }
             
             .game-card-name::first-letter {
@@ -248,7 +254,7 @@ $add-button-success-color: #3cbd82;
         }
         
         .game-card-body {
-            height: 85%;
+            height: 75%;
             padding: 5px;
             font-size: 12px;
             background-position: center;
@@ -370,6 +376,27 @@ $add-button-success-color: #3cbd82;
         
         .game-card-header {
             background: $common-card-color;
+        }
+    }
+
+    &.rare {
+        background: $rare-card-color;
+        
+        .game-card-header {
+            background: $rare-card-color;
+        }
+    }
+    
+    &.legendary {
+        background: $legendary-card-color;
+
+        .game-card-content {
+            border-color: $legendary-card-border-color;
+            color: $legendary-card-text-color
+        }
+        
+        .game-card-header {
+            background: $legendary-card-color;
         }
     }
 }
