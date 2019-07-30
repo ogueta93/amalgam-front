@@ -1,24 +1,62 @@
-# front-amalgam
+# Amalgam
+Amalgam is websocket server created for supplied all the processes to run a video game inspired in [Triple Triad](https://finalfantasy.fandom.com/wiki/Triple_Triad).
+- [Releases](https://github.com/ogueta93/amalgam-front/releases) 
 
-Amalgan is a card game based on the Final Fantasy VIII minigame called Triple Triad
-https://finalfantasy.fandom.com/wiki/Triple_Triad
+## Application Frontend
+Amalgam supplies the backend side. You can get the front here: 
+- [Amalgam Front](https://github.com/ogueta93/amalgam-front)
 
-## Project setup
+## Base technologies
+- [PHP 7.3](https://www.php.net/manual/en/intro-whatis.php)
+- [Symfony 4.3](https://symfony.com/)
+- [Rachet - PHP Websockets](http://socketo.me/)
+
+## Requirements
+To run this proyect correctly you need to prepare your local machine:
+
+- Debian Buster or greather.
+- Php version greather or equal to 7.3.
+	- **php-xml** extension.
+	- **php-curl** extension. 
+	- **php-memcached** extension.
+	- **php-intl** extension. 
+	- **php-mysql** extension.
+- Memcached, last version.
+- Mariadb, last version.
+- Composer, last version.
+
+## Installation instructions
+
+### 1. Composer
+**In the root directory run:**
 ```
-yarn install
+composer install
 ```
 
-### Compiles and hot-reloads for development
+### 2. Basic Proyect Configuration
+1. You must to set the host and the port for your memcached service in **config/cache.yaml** file. Example:
 ```
-yarn run serve
+# This file containt the cache configuration data
+connection: 'memcached://amalgam_memcached:11211'
+compression: true
+serializer: 'igbinary'
+```
+2. You must to set  the database configuration in **config/packages/dev/doctrine.yaml** file. Example:
+```
+doctrine:
+	dbal:
+		# Template Example:
+		url: mysql://{user}:{password}@{host}:{port}/{database}
+		# Live Example 
+		url: mysql://amalgam:amalgam@amalgam_mariadb:3306/amalgam
 ```
 
-### Compiles and minifies for production
-```
-yarn run build
-```
+**If you need more information you probably would like to check the symfony documentation**:
+- [Doctrine Configuration](https://symfony.com/doc/current/reference/configuration/doctrine.html)
 
-### Lints and fixes files
+## Start Websocket Server
+The websocket server runs on 8080 port number. At the moment, the port number is a hardcoded value.
+To start the server execute the custom **ws:start** command in the root directory:
 ```
-yarn run lint
+php bin\console ws:start
 ```
