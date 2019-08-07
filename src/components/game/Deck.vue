@@ -101,6 +101,10 @@ export default {
                 cardType: this.filters.cardType
             };
 
+            if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE) {
+                filters.battleMode = true;
+            }   
+
             this.$webSocket.sendComplexAction(ACTION.GET_USER_CARDS_ACTION, this.$options.name, filters, this.callBackGetUserCards);
             this.$loading.start(this.loadingName);
         },
