@@ -6,6 +6,10 @@ Amalgam front is a html5 videogame inspired in [Triple Triad](https://finalfanta
 Amalgam fronted supplies front side. You can get the back here: 
 - [Amalgam](https://github.com/ogueta93/amalgam)
 
+## Amalgam Dev-Tools
+Amalgam Dev Tools is a project that was maked with the idea to facilitied the necesary tools to develop in Amalgam and Amalgam Front.
+- [Amalgam Dev Tools](https://github.com/ogueta93/amalgam-dev-tools)
+
 ## Base technologies
 - [Node](https://nodejs.org/en/)
 - [Vue Cli](https://cli.vuejs.org/)
