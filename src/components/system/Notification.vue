@@ -16,6 +16,8 @@
 <script>
 import ACTION from '@/constants/Action';
 import EVENT from '@/constants/Event';
+import NOTIFICATION_TYPE from '@/constants/NotificationType';
+
 import notificationItem from '@/components/system/notification/NotificationItem';
 
 export default {
@@ -36,8 +38,30 @@ export default {
         this.$webSocket.setEvent(ACTION.NOTIFICATION_ACTION, this.$options.name, this.callBackNotification);
     },
     methods: {
+        filterNotification: function(data) {
+            var that = this;
+            var filterNotification = false;
+
+            switch (data.type) {
+                case NOTIFICATION_TYPE.BATTLE_TURN_MOVEMENT: 
+                    var regexGameRoute = new RegExp("^\/game\/battle\/" + data.battleId, "i");
+                    if (regexGameRoute.test(that.$router.currentRoute.fullPath)) {
+                        filterNotification = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return filterNotification;
+        },
+
         callBackNotification: function(response) {
             var data = response;
+            
+            if (this.filterNotification(data)) {
+                return;
+            }
 
             data.id = this.lastId++;
             data.visibility = this.data.length < this.maxItems ? true : false;
