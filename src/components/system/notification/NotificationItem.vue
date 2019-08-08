@@ -20,6 +20,7 @@
             <i class="fas fa-times-circle"></i>
         </div>
     </div>
+
     <div :data-id="data.id" class="notification-item accepted-batle-notification" v-else-if="data.type == types.ACCEPT_BATTLE">
         <div class="notification-item-icon">
             <i class="fas fa-chess"></i>
@@ -38,6 +39,25 @@
             <i class="fas fa-times-circle"></i>
         </div>
     </div>
+
+    <div :data-id="data.id" class="notification-item battle-turn-movement-notification" v-else-if="data.type == types.BATTLE_TURN_MOVEMENT">
+        <div class="notification-item-icon">
+            <i class="fas fa-forward"></i>
+        </div>
+        <div class="notification-item-content">
+            <div class="notification-item-message">
+                {{ $t('notification.battleTurnMovementMsg', {nickName: data.user.nickName}) }}
+            </div>
+            <div class="notification-item-buttons">
+                <div class="notification-button" @click="goToChallenge">
+                    {{ $t('notification.goToBattle') }}
+                </div>
+            </div>
+        </div>
+        <div class="notification-close-button" @click="closeNotification">
+            <i class="fas fa-times-circle"></i>
+        </div>
+    </div>    
 </template>
 
 <script>
@@ -130,6 +150,9 @@ $new-battle-notification-light-color: #4e96f5;
 
 $accepted-battle-notification-dark-color: #6110b9;
 $accepted-battle-notification-light-color: #9244e6;
+
+$battle-turn-movement-notification-dark-color: #e88e1a;
+$battle-turn-movement-notification-light-color: #f5ac4e;
 
 .notification-item {
     position: absolute;
@@ -231,6 +254,24 @@ $accepted-battle-notification-light-color: #9244e6;
             .notification-item-buttons {
                 .notification-button {
                     background-color: $accepted-battle-notification-dark-color;
+                }
+            }
+        }
+    }
+
+    &.battle-turn-movement-notification {
+        color: white;
+
+        .notification-item-icon {
+            background-color: $battle-turn-movement-notification-dark-color;
+        }
+
+        .notification-item-content {
+            background-color: $battle-turn-movement-notification-light-color;
+
+            .notification-item-buttons {
+                .notification-button {
+                    background-color: $battle-turn-movement-notification-dark-color;
                 }
             }
         }
