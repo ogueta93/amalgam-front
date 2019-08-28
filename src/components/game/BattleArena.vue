@@ -32,6 +32,7 @@ import ANNOUNCEMENT from '@/constants/Announcement';
 import ACTION from '@/constants/Action';
 import EVENT from '@/constants/Event';
 import BATTLE_PHASE from '@/constants/BattlePhase';
+import PLAYER_BATTLE_STATUS from '@/constants/PlayerBattleStatus';
 
 import gameCard from '@/components/game/deck/GameCard';
 import battleAnnouncement from '@/components/game/BattleAnnouncement';
@@ -61,6 +62,7 @@ export default {
             playerInteract: false,
             playerTurn: false,
             playerCards: [],
+            playerBattleStatus: null,
             rivalCards: [],
             playerCapturedCount: null,
             rivalCapturedCount: null,
@@ -113,16 +115,11 @@ export default {
             this.setBattleAnnouncement(ANNOUNCEMENT.TURN_STARTED, extra);
         },
         announceBattleResults: function() {
-            var battleResult = this.$battle.getBattleResults();
-            var winner = battleResult.winner !== undefined ? battleResult.winner : null;
+            this.playerBattleStatus = this.$battle.getPlayerBattleStatus(this.player.id);
 
-            var extra = {};
-            if (winner === null) {
-                extra.result = 'draw';
-            } else {
-                extra.result = winner.user.id === this.player.id ? 'winner' : 'loser';
-            }
-
+            var extra = {
+                result: this.playerBattleStatus
+            };
             this.setBattleAnnouncement(ANNOUNCEMENT.BATTLE_RESULT, extra);
         },
         placeCard: function(row, field) {
@@ -138,6 +135,16 @@ export default {
 
             this.playerInteract = false;
             this.$webSocket.sendAction(ACTION.BATTLE_MOVEMENT_ACTION, data);
+        },
+        playerLastAction: function() {
+            switch (this.playerBattleStatus) {
+                case PLAYER_BATTLE_STATUS.WINNER:
+                    this.$root.$emit(EVENT.BATTLE_FIELD_FIND_BATTLE);
+                    break;
+                default:
+                    this.playerInteract = true;
+                    break;
+            }
         },
         setBattleCounters() {
             this.playerCapturedCount = this.$battle.getCardsCapturedByUserId(this.player.id).length;
@@ -260,7 +267,7 @@ export default {
                     this.$root.$emit(EVENT.BATTLE_QUEUE_DATA);
                 }
             } else {
-                this.playerInteract = true;
+                this.playerLastAction();
             }
         },
         callBackBattleArenaPlayCard: function(userCardId) {

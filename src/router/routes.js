@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 /** Views */
 import login from '@/views/Login.vue';
 
@@ -14,8 +12,6 @@ import bfield from '@/views/game/BattleField';
 import freeCards from '@/views/game/debug/FreeCards';
 
 /** Constants */
-import ACTION from '@/constants/Action';
-
 const routes = [
     { 
         path: '/', component: login,
@@ -26,11 +22,11 @@ const routes = [
     {
         path: '/game', component: game,
         children: [
-            { path: '', component: home},
-            { path: 'deck', component: deck},
-            { path: 'bchamber/:type', component: bchamber},
-            { path: 'battle/:id', component: bfield},
-            { path: 'debug/freeCards', component: freeCards}
+            {path: '', component: home},
+            {path: 'deck', component: deck},
+            {path: 'bchamber/:type', component: bchamber},
+            {path: 'battle/:id', component: bfield},
+            {path: 'debug/freeCards', component: freeCards}
         ]
     }
 ];

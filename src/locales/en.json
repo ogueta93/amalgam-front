@@ -15,6 +15,15 @@
             "battleResult-loser": "You lose"
         }
     },
+
+    "battleReward": {
+        "claimRewardButton": "Claim Reward",
+
+        "simpleRewardMsg": "Congratulations! Choose one card like a prize",
+        "perfectRewardMsg": "Perfect game! You deserve all these cards",
+        "timeLimitTitle": "Time Limit"
+    },
+
     "cardType": {
         "none": "None",
         "common": "Common",
@@ -50,6 +59,7 @@
 
         "messages": {
             "actionDoesNotExists": "The action not exist",
+            "battleError_11": "The time to claim the reward has expired",
             "battleDeckSelectionLimit": "Can not choose more than five cards",
             "invalidCredentials": "The credentials entered are invalid",
             "noValidDataGeneric": "The input data is not valid",
@@ -84,10 +94,19 @@
 
     "notification": {
         "acceptChallenge": "Go",
-        "battleIsReadyMsg": "{nickName} has accepted the challenge", 
+        "battleIsReadyMsg": "{nickName} has accepted the challenge",
+        "battleRewardClaimedPerfect": "{nickName} has claimed all your played cards by a perfect game",
+        "battleRewardClaimedSimple": "{nickName} has claimed your card {cardName}",
+        "battleTurnMovementMsg": "{nickName} has made a new movement",
+        "battleTurnMovementDrawMsg:": "Your combat with {NickName} has been finished on Draw",
+        "battleTurnMovementLoserMsg": "What a same! {NickName} beat yout ({wPoints}-{lPoints})",
+        "battleTurnMovementWinnerMsg": "Congratulations! Yout beat {nickName} ({wPoints}-{lPoints})",
         "challengeMsg": "{nickName} wants to fight with you",
+        "claimReward": "Claim Rewad",
         "goToChallenge": "Take Challenge",
-        "refuse": "Refuse"
+        "goToBattle": "Go To Battle",
+        "refuse": "Refuse",
+        "timeLimitTitle": "Time Limit"
     },
 
     "resumeSelection": {

@@ -1,5 +1,7 @@
 export default {
     CARD_SELECTION_PHASE: 1,
     COIN_THROW_PHASE: 2,
-    BATTLE_PHASE: 3
-}
+    BATTLE_PHASE: 3,
+    REWARD_PHASE: 4,
+    FINISH_PHASE: 5
+};

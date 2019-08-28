@@ -44,7 +44,7 @@
         <div class="notification-item-icon">
             <i class="fas fa-forward"></i>
         </div>
-        <div class="notification-item-content">
+        <div v-if="!data.battleResult" class="notification-item-content">
             <div class="notification-item-message">
                 {{ $t('notification.battleTurnMovementMsg', {nickName: data.user.nickName}) }}
             </div>
@@ -54,16 +54,52 @@
                 </div>
             </div>
         </div>
+        <div v-else class="notification-item-content">
+             <div v-if="data.battleResult.winner && data.battleResult.winner.user.id !== data.user.id" class="notification-item-message">
+                {{ $t('notification.battleTurnMovementWinnerMsg', {nickName: data.user.nickName, wPoints: data.battleResult.winner.cardsCount, lPoints: data.battleResult.loser.cardsCount}) }}
+            </div>
+            <div v-else-if="data.battleResult.loser && data.battleResult.loser.user.id !== data.user.id" class="notification-item-message">
+                {{ $t('notification.battleTurnMovementLoserMsg', {nickName: data.user.nickName, wPoints: data.battleResult.winner.cardsCount, lPoints: data.battleResult.loser.cardsCount}) }}
+            </div>
+            <div v-else class="notification-item-message">
+                {{ $t('notification.battleTurnMovementDrawMsg', {nickName: data.user.nickName}) }}
+            </div>
+
+            <div v-if="data.battleResult.winner && data.battleResult.winner.user.id !== data.user.id" class="notification-item-buttons">
+                <div class="notification-button" @click="goToChallenge">
+                    {{ $t('notification.claimReward') }}
+                </div>
+            </div>
+        </div>
         <div class="notification-close-button" @click="closeNotification">
             <i class="fas fa-times-circle"></i>
         </div>
-    </div>    
+    </div>
+
+    <div :data-id="data.id" class="notification-item battle-reward-claimed-notification" v-else-if="data.type == types.BATTLE_REWARD_CLAIMED">
+        <div class="notification-item-icon">
+            <i class="fas fa-exclamation"></i>
+        </div>
+        <div class="notification-item-content">
+            <div v-if="data.rewardType === battleRewardTypes.SIMPLE_REWARD" class="notification-item-message">
+                {{ $t('notification.battleRewardClaimedSimple', {nickName: data.user.nickName, cardName: data.cards[0].name}) }}
+            </div>
+            <div v-else class="notification-item-message">
+                {{ $t('notification.battleRewardClaimedPerfect', {nickName: data.user.nickName}) }}
+            </div>
+        </div>
+        <div class="notification-close-button" @click="closeNotification">
+            <i class="fas fa-times-circle"></i>
+        </div>
+    </div>
 </template>
 
 <script>
-import EVENT from '@/constants/Event';
-import NOTIFICATION_TYPE from '@/constants/NotificationType';
 import ACTION from '@/constants/Action';
+import EVENT from '@/constants/Event';
+
+import BATTLE_REWARD_TYPE from '@/constants/BattleRewardType';
+import NOTIFICATION_TYPE from '@/constants/NotificationType';
 
 export default {
     name : 'notificationiTemComponent',
@@ -76,6 +112,7 @@ export default {
     data() {
         return {
             types: NOTIFICATION_TYPE,
+            battleRewardTypes: BATTLE_REWARD_TYPE,
             componentNameEvent: this.$options.name + '-' + this.data.id
         }
     },
@@ -153,6 +190,9 @@ $accepted-battle-notification-light-color: #9244e6;
 
 $battle-turn-movement-notification-dark-color: #e88e1a;
 $battle-turn-movement-notification-light-color: #f5ac4e;
+
+$battle-reward-claimed-notification-dark-color: #0b0c0c;
+$battle-reward-claimed-notification-light-color: #424b52;
 
 .notification-item {
     position: absolute;
@@ -269,9 +309,38 @@ $battle-turn-movement-notification-light-color: #f5ac4e;
         .notification-item-content {
             background-color: $battle-turn-movement-notification-light-color;
 
+            &.winner {
+                background-color: green;
+            }
+            &.loser {
+                background-color: red;
+            }
+            &.draw {
+                background-color: grey;
+            }
+
             .notification-item-buttons {
                 .notification-button {
                     background-color: $battle-turn-movement-notification-dark-color;
+                }
+            }
+        }
+    }
+    
+    &.battle-reward-claimed-notification {
+        color: white;
+
+        .notification-item-icon {
+            background-color: $battle-reward-claimed-notification-dark-color;
+            color: red;
+        }
+
+        .notification-item-content {
+            background-color: $battle-reward-claimed-notification-light-color;
+
+            .notification-item-buttons {
+                .notification-button {
+                    background-color: $battle-reward-claimed-notification-dark-color;
                 }
             }
         }

@@ -70,6 +70,9 @@ export default {
                 case ERROR_CONSTANTS.WS_AMALGAN_PHASE_COMMMON_ERROR:
                     console.log('commonError');
                     break;
+                case ERROR_CONSTANTS.WS_AMALGAN_PHASE_REWARD_ERROR:
+                    that.$router.push('/game');
+                    break;
                 default:
                     that.$router.push('/');
             }
