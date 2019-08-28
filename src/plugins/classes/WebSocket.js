@@ -85,7 +85,7 @@ export default {
         var data = {};
         data.a = action;
 
-        var callback = callback || function(){};
+        callback = callback || function(){};
 
         this.$setWsEvent(action, name, callback, callbackError, true);
 
@@ -190,7 +190,7 @@ export default {
 
         params = params.filter(function(element, index) {
             return index !== 0;
-        })
+        });
 
         var wsEvent = this.wsEvents[name];
         if (wsEvent) {
@@ -205,7 +205,7 @@ export default {
             delete this.wsEvents[name];
         } else if (this.wsEvents[name] !== undefined) {    
             var events = this.wsEvents[name].filter(function(wsEvent) {
-                return wsEvent.identifier !== identifier
+                return wsEvent.identifier !== identifier;
             });
 
             if (events.length) {
@@ -215,4 +215,4 @@ export default {
             }
         }
     }
-}
+};

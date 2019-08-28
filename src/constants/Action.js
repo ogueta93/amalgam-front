@@ -3,6 +3,7 @@ export default {
     BATTLE_MOVEMENT_ACTION: 'battleMovement',
 
     CHECK_SECURE_CONNECTION_ACTION: 'checkSecureConnection',
+    CLAIM_BATTLE_REWARD: 'claimBattleReward',
 
     DEBUG_ADD_CARD_ACTION: 'addCard',
 

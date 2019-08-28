@@ -1,3 +1,8 @@
+
+import PLAYER_BATTLE_STATUS from '@/constants/PlayerBattleStatus';
+import BATTLE_REWARD_TYPE from '@/constants/BattleRewardType';
+
+
 export default {
     app: null,
     options: null,
@@ -43,6 +48,21 @@ export default {
     },
     getPhase: function() {
         return this.data.progress.main.phase;
+    },
+    getCardsSelectionByUserId: function(userId) {
+        if (this.data.progress.main.cardsSelection === undefined) {
+            return [];
+        }
+    
+        var cardsSelection = [];
+        this.data.progress.main.cardsSelection.forEach(function(obj) {
+            if (obj.userId === userId) {
+                cardsSelection = obj.cards;
+                return;
+            }
+        });
+
+        return cardsSelection.length ? cardsSelection : [];
     },
     getCardsSelected: function(userId) {
         if (this.data.progress.main.cardsSelection === undefined) {
@@ -134,7 +154,7 @@ export default {
             this.data.progress.battleField.board.forEach(function(row) {
                 row.forEach(function(field) {
                     if (field.card !== undefined && field.card.userCardId === userCardId) {
-                        userId = field.userId
+                        userId = field.userId;
                         return;
                     }
                 });
@@ -178,6 +198,52 @@ export default {
     },
     getBattleResults: function() {
         return this.data.progress.main.battleResult !== undefined ? this.data.progress.main.battleResult : null;
+    },
+    getPlayerBattleStatus: function(userId) {
+        var battleResult = this.getBattleResults();
+        if (battleResult === null) {
+            return null;
+        }
+
+        var result;
+        var winner = battleResult.winner !== undefined ? battleResult.winner : null;
+
+        if (winner === null) {
+            result = PLAYER_BATTLE_STATUS.DRAW;
+        } else {
+           result = winner.user.id === userId ? PLAYER_BATTLE_STATUS.WINNER : PLAYER_BATTLE_STATUS.LOSER;
+        }
+
+        return result;
+    },
+    getRewardType: function() {
+        var battleResult = this.getBattleResults();
+        
+        return battleResult !== null ? battleResult.winner.rewardType : null;
+    },
+    getRewardedCards: function(userId) {
+        var rewardType = this.getRewardType();
+        var rival = this.getRival(userId);
+        var rewardedCards = this.getCardsSelectionByUserId(rival.id);
+     
+        if (rewardType === BATTLE_REWARD_TYPE.PERFECT_REWARD) {
+            return rewardedCards;
+        }
+
+        rewardedCards = rewardedCards.filter(function(obj) {
+            return obj.captured;
+        });
+
+        return rewardedCards;
+    },
+    getRewardExpiredTime: function() {
+        var battleResult = this.getBattleResults();
+        if (battleResult === null) {
+            return null;
+        }
+
+        var date = new Date(battleResult.winner.rewardExpiredTime);
+        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
     },
     checkUserShowColor: function(userId) {
         if (this.data.progress.main.cointThrow === undefined) {

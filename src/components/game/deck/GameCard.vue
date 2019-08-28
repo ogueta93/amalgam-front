@@ -1,7 +1,8 @@
 <template>
-    <div v-if="!faceDown" 
-    :class="['game-card ' + card.type.name, cardBattleColorClass, {selected: card.selected}, {'selected-in-battle': card.selectedInbattle}, 
-    {battleCard: battleCardClass}, {'playable-card': isPlayableCard}, {'recently-placed': card.recentlyPlaced}, {'recentlyCaptured': card.recentlyCaptured}]" 
+    <div v-if="!faceDown" :class="['game-card ' + card.type.name, cardBattleColorClass, {selected: card.selected}, 
+        {'selected-in-battle': card.selectedInbattle}, {battleCard: battleCardClass}, {'playable-card': isPlayableCard}, 
+        {'recently-placed': card.recentlyPlaced}, {recentlyCaptured: card.recentlyCaptured}, {rewardMode: rewardType},
+        {rewardSelected: cardRewardedSelected}]" 
     @click="cardAction">
         <div class="game-card-content">
             <div :class="['game-card-header', {hidden: hiddenHeaderClass}]">
@@ -35,6 +36,7 @@
 import ACTION from '@/constants/Action';
 import EVENT from '@/constants/Event';
 import BATTLE_PHASE from '@/constants/BattlePhase';
+import BATTLE_REWARD_TYPE from '@/constants/BattleRewardType';
 
 export default {
     name : 'gameCardComponent',
@@ -56,6 +58,10 @@ export default {
             type: Boolean,
             required: false
         },
+        rewardType: {
+            type: Number,
+            required: false
+        },
         debug: {
             type: Boolean,
             required: false
@@ -68,6 +74,7 @@ export default {
             hiddenHeaderClass: false,
             battleCardClass: false,
             isPlayableCard: false,
+            cardRewardedSelected: false,
             debugAddingCard: false
         }
     },
@@ -85,6 +92,10 @@ export default {
             this.cardBattleColorClass = this.getCardBattleColorWithOutRefence();
             this.battleCardClass = true;
         }
+
+        if (this.rewardType === BATTLE_REWARD_TYPE.PERFECT_REWARD) {
+            this.cardRewardedSelected = true;
+        }
     },
     updated: function() {
         /** after render */
@@ -101,6 +112,9 @@ export default {
             }
             if (this.battlePhase === BATTLE_PHASE.BATTLE_PHASE) {
                 this.playCard();
+            }
+            if (this.battlePhase === BATTLE_PHASE.REWARD_PHASE && this.rewardType === BATTLE_REWARD_TYPE.SIMPLE_REWARD) {
+                this.setReward();
             }
         },
         debubAddCard: function(id) {
@@ -123,6 +137,12 @@ export default {
                 this.card.selectedInbattle = !this.card.selectedInbattle;
                 this.$root.$emit(EVENT.BATTLE_ARENA_PLAY_CARD, this.card.userCardId);
             }
+        },
+        setReward: function() {
+            this.cardRewardedSelected = !this.cardRewardedSelected;
+
+            var data = this.cardRewardedSelected ? this : null;
+            this.$root.$emit(EVENT.BATTLE_REWARD_SELECTION, data);
         },
         getCardBattleColor: function() {
             var playerTurn = this.$battle.getInitialTurn(this.playerInfo.id);
@@ -170,7 +190,8 @@ $card-text-color: #ffdf32;
 $card-border-color: #ffef99;
 $card-selected-color:  rgba(255, 0, 0, 0.8);
 $card-selected-in-battle-color:  rgba(251, 255, 0, 0.8);
-
+$card-shadow-rewarded-color: rgba(255, 243, 0, 0.65);
+$card-shadow-rewarded-selected-color: rgba(26, 204, 86, 0.87);
 
 $primary-battle-color: #508cda;
 $secondary-battle-color: #ea4d32;
@@ -220,6 +241,16 @@ $add-button-success-color: #3cbd82;
         &.recentlyCaptured {
             animation: recentlyCaptured 1s linear;
         }
+    }
+
+    &.rewardMode {
+        box-shadow: 0px 0px 12px 12px $card-shadow-rewarded-color;
+        transition: margin 0.5s ease-out, box-shadow 0.5s ease-in;
+    }
+
+    &.rewardMode.rewardSelected {
+        box-shadow: 0px 0px 12px 12px $card-shadow-rewarded-selected-color;
+        margin-bottom: 75px;
     }
 
     .game-card-content {

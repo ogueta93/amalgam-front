@@ -3,7 +3,7 @@
         <div class="game-content-header">
             <div class="game-header-title">{{ $t("battleListHeader") }}</div>
             <div class="game-header-controls">
-                <i type="dark" @click="" class="fas fa-bars side-bar-button"></i>
+                <i type="dark" class="fas fa-bars side-bar-button"></i>
             </div>
         </div>
         <div class="game-content-body">
@@ -32,11 +32,11 @@
                             <div v-if="battle.action == suitableActions.choose" class="battle-accept-button" @click="acceptBattle(battle.id)">
                                 <i class="fas fa-check-square"></i>
                             </div>
-                            <div v-if="battle.action == suitableActions.choose || battle.action == suitableActions.wait" class="battle-refuse-button" @click="refuseBattle(battle.id)">
-                                <i class="fas fa-window-close"></i>
-                            </div>
                             <div v-if="battle.action == suitableActions.figth" class="battle-fight-button" @click="goToBattle(battle.id)">
                                 <i class="fab fa-affiliatetheme"></i>
+                            </div>
+                            <div v-if="battle.canRemove" class="battle-refuse-button" @click="refuseBattle(battle.id)">
+                                <i class="fas fa-window-close"></i>
                             </div>
                         </div>
                     </div>
@@ -52,6 +52,7 @@
 <script>
 import BATTLE_STATUS from '@/constants/BattleStatus';
 import BATTLE_TYPE from '@/constants/BattleType';
+import BATTLE_PHASE from '@/constants/BattlePhase';
 import EVENT from '@/constants/Event';
 import ACTION from '@/constants/Action';
 
@@ -70,7 +71,8 @@ export default {
                 figth: 3
             },
             battleTypes: BATTLE_TYPE,
-            battleStatus: BATTLE_STATUS
+            battleStatus: BATTLE_STATUS,
+            battlePhase: BATTLE_PHASE
         }
     },
     mounted: function() {
@@ -100,12 +102,15 @@ export default {
             var list = [];
 
             this.battleResults.forEach(function(element, index){
+                var battlePhase = element.data.progress !== undefined ? element.data.progress.main.phase : null;
+                
                 list.push(
                     {
                         id: element.id,
                         status: element.battleStatus,
                         rival: that.getAdversary(element.data.users),
                         action: that.getSuitableAction(element),
+                        canRemove: (!battlePhase || battlePhase === that.battlePhase.CARD_SELECTION_PHASE) ? true : false,
                         lastChange: element.data.lastChange
                     }
                 )
@@ -129,9 +134,9 @@ export default {
         getSuitableAction: function(element) {
             var currentUser = this.$localStorage.getUser();
 
-            if (element.data.createdBy.id === currentUser.id && element.battleStatus.id === this.battleStatus.PENDING) {
+            if (element.data.createdBy.id === currentUser.id && element.data.status.id === this.battleStatus.PENDING) {
                 return this.suitableActions.wait;
-            } else if (element.data.createdBy.id !== currentUser.id && element.battleStatus.id === this.battleStatus.PENDING) {
+            } else if (element.data.createdBy.id !== currentUser.id && element.data.status.id === this.battleStatus.PENDING) {
                 return this.suitableActions.choose;
             } else {
                 return this.suitableActions.figth;
@@ -158,6 +163,7 @@ export default {
 
         callBackGetUserBattleList: function(response) {
             this.battleResults = response;
+            console.log(this.battleResults);
             this.battleList = this.getBattleList();
             this.$loading.end(this.loadings.getUserBattleList);
         },

@@ -14,19 +14,25 @@
         <div v-if="battlePhase === BATTLE_PHASE.BATTLE_PHASE"  class="battle-field-battle-arena">
             <battleArena :battleData="data"></battleArena>
         </div>
+        <div v-if="battlePhase === BATTLE_PHASE.REWARD_PHASE && userIsWinner"  class="battle-field-battle-reward">
+            <battleReward :battleData="data"></battleReward>
+        </div>
     </div>
 </template>
 
 <script>
 import ACTION from '@/constants/Action';
+import EVENT from '@/constants/Event';
 import BATTLE_PHASE from '@/constants/BattlePhase';
 import LOADING from '@/constants/Loading';
 import ANNOUNCEMENT from '@/constants/Announcement';
+import PLAYER_BATTLE_STATUS from '@/constants/PlayerBattleStatus';
 
 import deck from '@/components/game/Deck';
 import resumeSelection from '@/components/game/ResumeSelection';
 import battleAnnouncement from '@/components/game/BattleAnnouncement';
 import battleArena from '@/components/game/BattleArena';
+import battleReward from '@/components/game/BattleReward';
 
 export default {
     name : 'battleFieldView',
@@ -34,7 +40,8 @@ export default {
         deck,
         resumeSelection,
         battleAnnouncement,
-        battleArena
+        battleArena,
+        battleReward
     },
     data() {
         return {
@@ -47,7 +54,8 @@ export default {
             battlePhase: null,
             cardsSelected: [],
             initialTurn: null,
-            userShowColor: false
+            userShowColor: false,
+            userIsWinner: false
         }
     },
     mounted: function() {
@@ -55,11 +63,15 @@ export default {
         this.$webSocket.setEvent(ACTION.SET_CARDS_SELECTION, this.$options.name, this.callBackFindBattle);
         this.$webSocket.setEvent(ACTION.SHOW_THROW_ANNOUNCEMENT, null, this.callBackFindBattle);
 
+        this.$root.$on(EVENT.BATTLE_FIELD_FIND_BATTLE, this.findBattle);
+
         this.findBattle();
     },
     destroyed: function() {
         this.$webSocket.$wsOff(ACTION.SET_CARDS_SELECTION, this.$options.name);
         this.$webSocket.$wsOff(ACTION.SHOW_THROW_ANNOUNCEMENT);
+
+        this.$root.$off(EVENT.BATTLE_FIELD_FIND_BATTLE);
     },
     updated: function() {
         /** after render */
@@ -86,6 +98,7 @@ export default {
             this.cardsSelected = this.$battle.getCardsSelected(this.userId);
             this.initialTurn = this.$battle.getInitialTurn(this.userId);
             this.userShowColor = this.$battle.checkUserShowColor(this.userId);
+            this.userIsWinner = this.$battle.getPlayerBattleStatus(this.userId) === PLAYER_BATTLE_STATUS.WINNER ? true : false;
 
             this.callPhaseEvents();
         },
@@ -150,10 +163,11 @@ export default {
         justify-content: center;
     }
 
-    .battle-field-battle-arena {
+    .battle-field-battle-arena, .battle-field-battle-reward {
         height: 100%;
         width: 100%;
     }
+    
 }
 /* End battleFieldView customization */
 </style>
