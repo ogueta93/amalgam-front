@@ -173,7 +173,7 @@ $game-header-filters-search-buttom-color: #1a73e8;
 /** END Element game-content */
 
 /** error */
-.app-error {
+.app-error, .app-confirmation {
     display: none;
     position: absolute;
     top: 0;

@@ -8,16 +8,21 @@
         <div class="app-error">
             <error></error>
         </div>
+        <div class="app-confirmation">
+            <confirmation></confirmation>
+        </div>
     </div>
 </template>
 
 <script>
 import error from '@/components/system/Error';
+import confirmation from '@/components/system/Confirmation';
 
 export default {
     name : 'app',
     components: {
-        error
+        error,
+        confirmation
     },
     data() {
         return {

@@ -73,6 +73,9 @@ export default {
                 case ERROR_CONSTANTS.WS_AMALGAN_PHASE_REWARD_ERROR:
                     that.$router.push('/game');
                     break;
+                case ERROR_CONSTANTS.WS_AMALGAN_PHASE_SHOP_ERROR:
+                    that.$router.push('/game/shop');
+                    break;
                 default:
                     that.$router.push('/');
             }
