@@ -1,7 +1,7 @@
 module.exports = {
     devServer: {
 		open: process.platform === 'darwin',
-		host: 'vascoframework.es',
+		host: '',
 		port: 4545,
 		https: false,
 		hotOnly: false,
