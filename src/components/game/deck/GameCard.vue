@@ -2,8 +2,7 @@
     <div v-if="!faceDown" :class="['game-card ' + card.type.name, cardBattleColorClass, {selected: card.selected}, 
         {'selected-in-battle': card.selectedInbattle}, {battleCard: battleCardClass}, {'playable-card': isPlayableCard}, 
         {'recently-placed': card.recentlyPlaced}, {recentlyCaptured: card.recentlyCaptured}, {rewardMode: rewardType},
-        {rewardSelected: cardRewardedSelected}]" 
-    @click="cardAction">
+        {rewardSelected: cardRewardedSelected}, {'shop-mode': shopMode}, {'opened-mode': openedMode}]" @click="cardAction">
         <div class="game-card-content">
             <div :class="['game-card-header', {hidden: hiddenHeaderClass}]">
                 <div class="game-card-name">{{card.name}}</div>
@@ -62,6 +61,14 @@ export default {
             type: Number,
             required: false
         },
+        shopMode: {
+            type: Boolean,
+            required: false
+        },
+        openedMode: {
+            type: Boolean,
+            required: false
+        },
         debug: {
             type: Boolean,
             required: false
@@ -103,18 +110,21 @@ export default {
     watch: {
         'card.captured': function() {
             this.cardBattleColorClass = this.getCardBattleColor();
-        },
+        }
     },
     methods: {
         cardAction: function() {
             if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE) {
-                this.setToplay();
+                this.setToPlay();
             }
             if (this.battlePhase === BATTLE_PHASE.BATTLE_PHASE) {
                 this.playCard();
             }
             if (this.battlePhase === BATTLE_PHASE.REWARD_PHASE && this.rewardType === BATTLE_REWARD_TYPE.SIMPLE_REWARD) {
                 this.setReward();
+            }
+            if (this.shopMode) {
+                this.setToPay();
             }
         },
         debubAddCard: function(id) {
@@ -128,9 +138,13 @@ export default {
             };
             this.$webSocket.sendComplexAction(ACTION.DEBUG_ADD_CARD_ACTION, this.$options.name, data, this.callBackDebugAddCard);
         },
-        setToplay: function() {
+        setToPlay: function() {
             this.card.selected = !this.card.selected;
             this.$root.$emit(EVENT.BATTLE_DECK_SELECTION, this.card.userCardId);
+        },
+        setToPay: function() {
+            this.card.selected = !this.card.selected;
+            this.$root.$emit(EVENT.SHOP_DECK_SELECTION, this.card.userCardId);
         },
         playCard: function() {
             if (this.isPlayableCard && this.$battle.isPlayerTurn(this.playerInfo.id)) {
@@ -251,6 +265,39 @@ $add-button-success-color: #3cbd82;
     &.rewardMode.rewardSelected {
         box-shadow: 0px 0px 12px 12px $card-shadow-rewarded-selected-color;
         margin-bottom: 75px;
+    }
+
+    &.shop-mode {
+        width: 75px;
+        height: 145px;
+        margin: 12px;
+
+        &.selected {
+            box-shadow: 0px 0px 0px 5px $card-selected-color;
+        }
+
+        .game-card-content {
+            .game-card-header {
+                .game-card-name {
+                    font-size: 0.2rem;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+                .game-card-id {
+                    display: none;
+                }
+            }
+
+            .game-card-body {
+                font-size: 0.5rem;
+            }
+        }
+    }
+
+    &.opened-mode {
+
+        margin: 10px;
+        box-shadow: 0px 0px 6px 8px $card-shadow-rewarded-color;
     }
 
     .game-card-content {

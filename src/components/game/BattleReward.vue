@@ -108,7 +108,6 @@ export default {
           
             var countDown = setInterval(function() {
                 that.expiredTime = that.getExpiredTime();
-                console.log(that.expiredTime);
                 if (that.expiredTime === 0) {
                     that.showErrorExpiredTime();
                     clearInterval(that.countDown);

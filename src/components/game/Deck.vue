@@ -28,7 +28,7 @@
             </div>
             <div class="deck-cards">
                 <div v-if="cards.length" class="deck-cards-content">
-                    <gameCard v-for="card in cards" :key="card.userCardId" :card="card" :battlePhase="battlePhase"></gameCard>
+                    <gameCard v-for="card in cards" :key="card.userCardId" :card="card" :battlePhase="battlePhase" :shopMode="shopMode"></gameCard>
                 </div>
             </div>
         </div>
@@ -48,6 +48,10 @@ export default {
         battlePhase: {
             type: Number,
             required: false
+        },
+        shopMode: {
+            type: Boolean,
+            required: false,
         }
     },
     components: {
@@ -57,7 +61,6 @@ export default {
         return {
             cards: [],
             cardsSelected: [],
-
             filters: {
                 cardName: "",
                 cardType: 0,
@@ -79,9 +82,14 @@ export default {
         if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE) {
             this.$root.$on(EVENT.BATTLE_DECK_SELECTION, this.callbackToggleDeckSelection);
         }
+
+        if (this.shopMode) {
+            this.$root.$on(EVENT.SHOP_DECK_SELECTION, this.callbackToggleShopSelection);
+        }
     },
     destroyed: function() {
         this.$root.$off(EVENT.BATTLE_DECK_SELECTION, this.callbackToggleDeckSelection);
+        this.$root.$off(EVENT.SHOP_DECK_SELECTION, this.callbackToggleDeckSelection);
     },
     methods: {
         onSubmit: function(evt) {
@@ -101,7 +109,7 @@ export default {
                 cardType: this.filters.cardType
             };
 
-            if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE) {
+            if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE || this.shopMode) {
                 filters.battleMode = true;
             }   
 
@@ -113,7 +121,7 @@ export default {
             var that = this;
             var cards = response;
 
-            if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE) {
+            if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE || this.shopMode) {
                 cards.forEach(function(obj, index, array) {
                     var cardSelected = that.cardsSelected.filter(function(element){
                         return element.userCardId === obj.userCardId;
@@ -163,6 +171,28 @@ export default {
             }
 
             this.$root.$emit(EVENT.BATTLE_DECK_RESUME_SELECTION, this.cardsSelected);
+        },
+
+        callbackToggleShopSelection: function(userCardId) {
+            var that = this;
+
+            var cardsFiltered = this.cardsSelected.filter(function(obj){
+                return obj.userCardId === userCardId;
+            });
+            
+            if (cardsFiltered.length > 0) {
+                this.cardsSelected = this.cardsSelected.filter(function(obj){
+                    return obj.userCardId !== userCardId;
+                });
+            } else {
+                var cardSelected = this.cards.filter(function(obj){
+                    return obj.userCardId === userCardId;
+                });
+            
+                this.cardsSelected.push(cardSelected[0]);
+            }
+
+            this.$root.$emit(EVENT.SHOP_DECK_RESUME_SELECTION, this.cardsSelected);
         }
     }
 };

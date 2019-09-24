@@ -30,6 +30,23 @@ export default [
     },
     {
         id: 4,
+        name: 'sidebar.shop',
+        href: null,
+        childs: [
+            {
+                id: 1,
+                name: 'sidebar.storeFront',
+                href: '/game/shop'
+            },
+            {
+                id: 2,
+                name: 'sidebar.shopInventory',
+                href: '/game/shopInventory'
+            }
+        ]
+    },
+    {
+        id: 5,
         name: 'Debug',
         href: null,
         debug: true,
