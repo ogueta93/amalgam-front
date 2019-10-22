@@ -10,29 +10,29 @@ export default {
 
     /** Battle properties */
 
-    setData: function(data) {
+    setData(data) {
         this.data = data;
         this.vitaminizeCards();
         this.vitaminizeInBoardCards();
     },
-    vitaminizeCards: function() {
+    vitaminizeCards() {
         if (this.data.progress.main.cardsSelection === undefined) {
             return;
         }
         
-        this.data.progress.main.cardsSelection.forEach(function(obj) {
-            obj.cards.forEach(function(element, index, array) {
+        this.data.progress.main.cardsSelection.forEach((obj) => {
+            obj.cards.forEach((element, index, array) => {
                 array[index].selectedInbattle = false;
             });
         });
     },
-    vitaminizeInBoardCards: function() {
+    vitaminizeInBoardCards() {
         if (this.data.progress.battleField === undefined) {
             return;
         }
         
-        this.data.progress.battleField.board.forEach(function(row) {
-            row.forEach(function(field, index, array) {
+        this.data.progress.battleField.board.forEach((row) => {
+            row.forEach((field, index, array) => {
                 if (field.card !== undefined) {
                     array[index].card.recentlyPlaced = false;
                     array[index].card.recentlyCaptured = false;
@@ -40,22 +40,22 @@ export default {
             });
         });
     },
-    getData: function() {
+    getData() {
         return this.data;
     },
-    getId: function() {
+    getId() {
         return this.data.id;
     },
-    getPhase: function() {
+    getPhase() {
         return this.data.progress.main.phase;
     },
-    getCardsSelectionByUserId: function(userId) {
+    getCardsSelectionByUserId(userId) {
         if (this.data.progress.main.cardsSelection === undefined) {
             return [];
         }
     
         var cardsSelection = [];
-        this.data.progress.main.cardsSelection.forEach(function(obj) {
+        this.data.progress.main.cardsSelection.forEach((obj) => {
             if (obj.userId === userId) {
                 cardsSelection = obj.cards;
                 return;
@@ -64,15 +64,15 @@ export default {
 
         return cardsSelection.length ? cardsSelection : [];
     },
-    getCardsSelected: function(userId) {
+    getCardsSelected(userId) {
         if (this.data.progress.main.cardsSelection === undefined) {
             return [];
         }
 
         var cardsSelected = [];
-        this.data.progress.main.cardsSelection.forEach(function(obj) {
+        this.data.progress.main.cardsSelection.forEach((obj) => {
             if (obj.userId === userId) {
-                cardsSelected = obj.cards.filter(function(element) {
+                cardsSelected = obj.cards.filter((element) => {
                     return !element.placed;
                 });
                 return;
@@ -81,14 +81,14 @@ export default {
 
         return cardsSelected.length ? cardsSelected : [];
     },
-    getCardsCapturedByUserId: function(userId) {
+    getCardsCapturedByUserId(userId) {
         if (this.data.progress.main.cardsSelection === undefined) {
             return [];
         }
 
         var cardsCaptured = [];
-        this.data.progress.main.cardsSelection.forEach(function(obj) {
-            obj.cards.forEach(function(card) {
+        this.data.progress.main.cardsSelection.forEach((obj) => {
+            obj.cards.forEach((card) => {
                 if ((obj.userId === userId) && !card.captured) {
                     cardsCaptured.push(card);
                 } else if ((obj.userId !== userId) && card.captured) {
@@ -99,13 +99,13 @@ export default {
 
         return cardsCaptured.length ? cardsCaptured : [];
     },
-    getInitialTurn: function(userId) {
+    getInitialTurn(userId) {
         if (this.data.progress.main.cointThrow === undefined) {
             return [];
         }
 
         var initialTurn;
-        this.data.progress.main.cointThrow.forEach(function(obj, index) {
+        this.data.progress.main.cointThrow.forEach((obj, index) => {
             if (obj.userId === userId) {
                 initialTurn = index === 0 ? 1 : 2;
                 return;
@@ -114,21 +114,21 @@ export default {
 
         return initialTurn;
     },
-    getRival: function(playerId) {
-        var rival = this.data.users.filter(function(obj){
+    getRival(playerId) {
+        var rival = this.data.users.filter((obj) => {
             return obj.user.id !== playerId;
         });
 
         return rival.length ? rival[0].user : null;
     },
-    getBoard: function() {
+    getBoard() {
         if (this.data.progress.battleField === undefined) {
             return [];
         }
 
         return this.data.progress.battleField.board;
     },
-    getCurrentTurn: function() {
+    getCurrentTurn() {
         if (this.data.progress.turns === undefined) {
             return null;
         }
@@ -136,14 +136,14 @@ export default {
         var turns = this.data.progress.turns;
         return turns[turns.length - 1];
     },
-    getPlayerOwnership: function(userCardId) {
+    getPlayerOwnership(userCardId) {
         if (this.data.progress.main.cardsSelection === undefined) {
             return null;
         }
 
         var userId = null;
-        this.data.progress.main.cardsSelection.forEach(function(obj) {
-            obj.cards.forEach(function(element) {
+        this.data.progress.main.cardsSelection.forEach((obj) => {
+            obj.cards.forEach((element) => {
                if (element.userCardId === userCardId) {
                    userId = obj.userId;
                    return;
@@ -151,8 +151,8 @@ export default {
             });
         });
         if (userId === null) {
-            this.data.progress.battleField.board.forEach(function(row) {
-                row.forEach(function(field) {
+            this.data.progress.battleField.board.forEach((row) => {
+                row.forEach((field) => {
                     if (field.card !== undefined && field.card.userCardId === userCardId) {
                         userId = field.userId;
                         return;
@@ -161,13 +161,13 @@ export default {
             });
         }
 
-        var user = this.data.users.filter(function(obj) {
+        var user = this.data.users.filter((obj) => {
             return obj.user.id === userId;
         });
 
         return user.length ? user[0].user : null;
     },
-    getLastMovement: function() {
+    getLastMovement() {
         if (this.data.progress.turns === undefined) {
             return null;
         }
@@ -177,7 +177,7 @@ export default {
         
         return lasTurn.movement;
     },
-    getLastCardsCaptured: function() {
+    getLastCardsCaptured() {
         var lastMovement = this.getLastMovement();
         if (!lastMovement) {
             return null;
@@ -188,7 +188,7 @@ export default {
             cardsCaptured = cardsCaptured.concat(lastMovement.cardsCaptured);
 
             if (lastMovement.combo !== undefined) {
-                lastMovement.combo.forEach(function(obj) {
+                lastMovement.combo.forEach((obj) => {
                     cardsCaptured = cardsCaptured.concat(obj.cardsCaptured);
                 });
             }
@@ -196,10 +196,10 @@ export default {
 
         return cardsCaptured.length ? cardsCaptured : null;
     },
-    getBattleResults: function() {
+    getBattleResults() {
         return this.data.progress.main.battleResult !== undefined ? this.data.progress.main.battleResult : null;
     },
-    getPlayerBattleStatus: function(userId) {
+    getPlayerBattleStatus(userId) {
         var battleResult = this.getBattleResults();
         if (battleResult === null) {
             return null;
@@ -216,12 +216,12 @@ export default {
 
         return result;
     },
-    getRewardType: function() {
+    getRewardType() {
         var battleResult = this.getBattleResults();
         
         return battleResult !== null ? battleResult.winner.rewardType : null;
     },
-    getRewardedCards: function(userId) {
+    getRewardedCards(userId) {
         var rewardType = this.getRewardType();
         var rival = this.getRival(userId);
         var rewardedCards = this.getCardsSelectionByUserId(rival.id);
@@ -230,13 +230,13 @@ export default {
             return rewardedCards;
         }
 
-        rewardedCards = rewardedCards.filter(function(obj) {
+        rewardedCards = rewardedCards.filter((obj) => {
             return obj.captured;
         });
 
         return rewardedCards;
     },
-    getRewardExpiredTime: function() {
+    getRewardExpiredTime() {
         var battleResult = this.getBattleResults();
         if (battleResult === null) {
             return null;
@@ -245,18 +245,18 @@ export default {
         var date = new Date(battleResult.winner.rewardExpiredTime);
         return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
     },
-    checkUserShowColor: function(userId) {
+    checkUserShowColor(userId) {
         if (this.data.progress.main.cointThrow === undefined) {
             return false;
         }
 
-        var userShowColor = this.data.progress.main.cointThrow.filter(function(obj){
+        var userShowColor = this.data.progress.main.cointThrow.filter((obj) => {
             return (obj.userId === userId) && obj.checked;
         });
 
         return userShowColor.length ? true : false;
     },
-    isPlayerTurn: function(playerId) {
+    isPlayerTurn(playerId) {
         var turn = this.getCurrentTurn();
         if (!turn) {
             return false;
@@ -264,7 +264,7 @@ export default {
 
         return turn.userId === playerId ? true : false;
     },
-    isFinished: function() {
+    isFinished() {
         return this.data.progress.main.battleResult !== undefined ? true : false;
     }
 }

@@ -12,7 +12,7 @@
                     <div class="game-body-content">
                         <div class="resume-cart">
                             <div :class="['purchase-element', purchase.name]" v-for="purchase in purchases" :key="purchase.id" >
-                                <div class="purchae-name">
+                                <div class="purchase-name">
                                     {{purchase.name}}
                                 </div>
                                 <div class="purchase-commands">
@@ -92,23 +92,23 @@ export default {
             dailyFreeBooster: false,
         }
     },
-    mounted: function() {
+    mounted() {
         this.$root.$on(EVENT.ADD_BOOSTER, this.callBackAddBooster);
         this.$root.$on(EVENT.SHOP_DECK_RESUME_SELECTION, this.callBackShopDeckResumeSelection);
 
         this.getBoosters();
         this.checkUserDailyFreeBooster();
     },
-    destroyed: function() {
+    destroyed() {
         this.$root.$off(EVENT.ADD_BOOSTER);
         this.$root.$off(EVENT.SHOP_DECK_RESUME_SELECTION);
     },
     methods: {
-        getBoosters: function() {
+        getBoosters() {
             this.$webSocket.sendComplexAction(ACTION.GET_AVAILABLE_BOOSTERS, this.$options.name, {}, this.callBackGetBoosters);
         },
-        addBooster: function(id) {            
-            var booster = this.boosters.filter(function(obj) {
+        addBooster(id) {            
+            var booster = this.boosters.filter((obj) => {
                 return obj.id === id;
             });
 
@@ -116,7 +116,7 @@ export default {
             
             this.reloadPurchases();
         },
-        removeBooster: function(id) {
+        removeBooster(id) {
             for (var index = this.shopCart.length -1; index >= 0; index--) {
                 if (this.shopCart[index].id === id) {
                     this.shopCart.splice(index, 1);
@@ -126,14 +126,14 @@ export default {
 
             this.reloadPurchases();
         },
-        reloadPurchases: function() {
+        reloadPurchases() {
             var that = this;
 
             this.purchases = [];
 
             var boosterTypes = this.getBoosterTypesInCart();
-            boosterTypes.forEach(function(id) {
-                var purchase = that.shopCart.filter(function(obj) {
+            boosterTypes.forEach((id) => {
+                var purchase = that.shopCart.filter((obj) => {
                     return obj.id === id;
                 });
                 
@@ -146,38 +146,38 @@ export default {
             this.setLimitWinRowBoosters();
             this.totalCost = this.getTotalCost();
         },
-        finishPurchase: function() {
+        finishPurchase() {
             var purchases = {
                 purchases: [],
                 userCardIdsToPay: []
             };
 
-            this.purchases.forEach(function(obj) {
+            this.purchases.forEach((obj) => {
                 purchases.purchases.push({id: obj.id, quantity: obj.quantity});
             });
 
-            this.userCardSelectedToPay.forEach(function(obj) {
+            this.userCardSelectedToPay.forEach((obj) => {
                 purchases.userCardIdsToPay.push(obj.userCardId);
             });
 
             this.$webSocket.sendComplexAction(ACTION.PURCHASE_BOOSTERS_ACTION, this.$options.name, purchases, this.callBackFinishPurchase);
         },
-        checkUserDailyFreeBooster: function() {
+        checkUserDailyFreeBooster() {
             this.$webSocket.sendComplexAction(ACTION.CHECK_USER_DAILY_BOOSTER_ACTION, this.$options.name, {}, this.callBackCheckDailyBooster);
         },
-        toogleBuyScreen: function() {
+        toogleBuyScreen() {
             this.buyScreen = !this.buyScreen;
         },
-        setLimitWinRowBoosters: function() {
-            var rowBoosterInPurchase = this.purchases.filter(function(obj) {
+        setLimitWinRowBoosters() {
+            var rowBoosterInPurchase = this.purchases.filter((obj) => {
                 return obj.id === BOOSTER_TYPE.SPECIAL || obj.id === BOOSTER_TYPE.LEGENDARY;
             });
 
-            rowBoosterInPurchase.forEach(function(obj) {
+            rowBoosterInPurchase.forEach((obj) => {
                 obj.limitReached = true;
             });
             
-            this.boosters.forEach(function(obj) {
+            this.boosters.forEach((obj) => {
                 if(obj.id === BOOSTER_TYPE.SPECIAL || obj.id === BOOSTER_TYPE.LEGENDARY) {
                     if (rowBoosterInPurchase.length) {
                         obj.limitReached = true;
@@ -187,10 +187,10 @@ export default {
                 }
             });
         },
-        getBoosterTypesInCart: function() {
+        getBoosterTypesInCart() {
             var boosterTypes = [];
 
-            this.shopCart.forEach(function(obj) {
+            this.shopCart.forEach((obj) => {
                 if (!boosterTypes.includes(obj.id)) {
                     boosterTypes.push(obj.id); 
                 }
@@ -198,56 +198,56 @@ export default {
 
             return boosterTypes;
         },
-        getDailyFreeBooster: function() {
+        getDailyFreeBooster() {
             if (!this.dailyFreeBooster) {
                 return false;
             }
 
             this.$webSocket.sendComplexAction(ACTION.GET_DAILY_FREE_BOOSTER, this.$options.name, {}, this.callBackGetDailyFreeBooster);
         },
-        getTotalCost: function() {
+        getTotalCost() {
             var totalCost = 0;
 
-            this.purchases.forEach(function(obj) {
+            this.purchases.forEach((obj) => {
                 totalCost += obj.cost * obj.quantity
             });
 
             return totalCost;
         },
-        callBackGetBoosters: function(response) {
+        callBackGetBoosters(response) {
             var boosters = response;
-            boosters.forEach(function(obj) {
+            boosters.forEach((obj) => {
                 obj.limitReached = false;
             });
             
             this.boosters = boosters;
         },
-        callBackAddBooster: function(boosterComponent) {
+        callBackAddBooster(boosterComponent) {
             var booster = boosterComponent.booster;
             
             this.addBooster(booster.id);
             boosterComponent.correctlyAdded = true;
         },
-        callBackShopDeckResumeSelection: function(cards) {
+        callBackShopDeckResumeSelection(cards) {
             this.userCardSelectedToPay = cards;
         },
-        callBackFinishPurchase: function(response) {
+        callBackFinishPurchase(response) {
             this.toogleBuyScreen();
             this.$root.$emit(EVENT.CONFIRMATION_EVENT, CONFIRMATION_TYPE.PURCHASE_HAS_FINISHED);
 
             var that = this;
             this.resetDeck = true;
-            this.$nextTick(function() {
+            this.$nextTick(() => {
                 that.resetDeck = false;
                 that.shopCart = [];
                 that.userCardSelectedToPay = [];
                 that.reloadPurchases();
             });
         },
-        callBackCheckDailyBooster: function(response) {
+        callBackCheckDailyBooster(response) {
             this.dailyFreeBooster = response;
         },
-        callBackGetDailyFreeBooster: function(response) {
+        callBackGetDailyFreeBooster(response) {
             this.$root.$emit(EVENT.CONFIRMATION_EVENT, CONFIRMATION_TYPE.PURCHASE_HAS_FINISHED);
             this.checkUserDailyFreeBooster();
         }
@@ -369,7 +369,7 @@ $add-free-booster-button-shadow-color: #ffe48df5;
                             }
                         }
 
-                        .purchae-name {
+                        .purchase-name {
                             display: flex;
                             height: 100%;
                             width: 80%;
@@ -535,6 +535,240 @@ $add-free-booster-button-shadow-color: #ffe48df5;
 
             &:hover {
                 transform: scale(1.2);
+            }
+        }
+    }
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .shop-content {
+        .daily-free-booster {
+            top: 0;
+            right: 5px;
+            height: 75px;
+            width: 150px;
+
+            .daily-free-booster-text {
+                font-size: 0.8rem;
+            }
+
+            .daily-free-booster-icon {
+                font-size: 1.5rem;
+            }
+        }
+
+        .cart-content {
+            .game-content {
+                .game-content-body {
+                    .resume-cart {
+                        .purchase-element {
+                            height: 30px;
+                            border: solid 3px;
+
+                            .purchase-name {
+                                width: 70%;
+                                font-size: 0.7rem;
+                            }
+
+                            .purchase-commands {
+                                width: 30%;
+                                .purchase-plus {
+                                    font-size: 0.8rem;
+                                }
+
+                                .purchase-quantity {
+                                    font-size: 0.9rem;
+                                }
+
+                                .purchase-remove {
+                                    font-size: 0.8rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            .cart-actions-content {
+                .accept-selection-button {                  
+                    &.show {
+                        height: 40px;
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
+        
+        .buy-screen-content {
+            .resume-cart-count {
+                .cart-finish-button {
+                    font-size: 0.8rem;
+                }
+            }
+        }
+    }
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .shop-content {
+        .daily-free-booster {
+            top: 0;
+            right: 5px;
+            height: 50px;
+            width: 100px;
+
+            .daily-free-booster-text {
+                font-size: 0.5rem;
+            }
+
+            .daily-free-booster-icon {
+                font-size: 1rem;
+            }
+        }
+
+        .cart-content {
+            .game-content {
+                .game-content-header {
+                    .game-header-title {
+                        font-size: 0.8rem;
+                    }
+                }
+
+                .game-content-body {
+                    background-color: inherit;
+                    .resume-cart {
+                        padding: 10px;
+                        .purchase-element {
+                            height: 25px;
+                            border: solid 2px;
+
+                            .purchase-name {
+                                width: 70%;
+                                font-size: 0.5rem;
+                            }
+
+                            .purchase-commands {
+                                width: 30%;
+                                .purchase-plus {
+                                    font-size: 0.6rem;
+                                }
+
+                                .purchase-quantity {
+                                    font-size: 0.7rem;
+                                }
+
+                                .purchase-remove {
+                                    font-size: 0.6rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            .cart-actions-content {
+                .accept-selection-button {                  
+                    &.show {
+                        height: 20px;
+                        font-size: 0.8rem;
+                    }
+                }
+            }
+        }
+        
+        .buy-screen-content {
+            .resume-cart-count {
+                .cards-count {
+                    font-size: 0.6rem;
+                }
+
+                .cart-finish-button {
+                    font-size: 0.4rem;
+                }
+            }
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .shop-content {
+        .daily-free-booster {
+            top: 0;
+            right: -20px;
+            height: 50px;
+            width: 100px;
+
+            .daily-free-booster-text {
+                font-size: 0.5rem;
+            }
+
+            .daily-free-booster-icon {
+                font-size: 1rem;
+            }
+        }
+
+        .cart-content {
+            .game-content {
+                .game-content-header {
+                    .game-header-title {
+                        font-size: 0.8rem;
+                    }
+                }
+
+                .game-content-body {
+                    background-color: inherit;
+                    .resume-cart {
+                        padding: 10px;
+                        .purchase-element {
+                            height: 25px;
+                            border: solid 2px;
+
+                            .purchase-name {
+                                width: 70%;
+                                font-size: 0.5rem;
+                            }
+
+                            .purchase-commands {
+                                width: 30%;
+                                .purchase-plus {
+                                    font-size: 0.6rem;
+                                }
+
+                                .purchase-quantity {
+                                    font-size: 0.7rem;
+                                }
+
+                                .purchase-remove {
+                                    font-size: 0.6rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            .cart-actions-content {
+                .accept-selection-button {                  
+                    &.show {
+                        height: 20px;
+                        font-size: 0.8rem;
+                    }
+                }
+            }
+        }
+        
+        .buy-screen-content {
+            .resume-cart-count {
+                .cards-count {
+                    font-size: 0.6rem;
+                }
+
+                .cart-finish-button {
+                    font-size: 0.4rem;
+                }
             }
         }
     }

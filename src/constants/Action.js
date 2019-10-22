@@ -17,6 +17,9 @@ export default {
     GET_USER_CARDS_ACTION: 'getUserCards',
 
     FIND_BATTLE_ACTION: 'findBattle',
+
+    HEART_BEAT: 'heartBeat',
+
     LOGIN_ACTION: 'login',
     NEW_BATTLE_ACTION: 'newBattle',
     NOTIFICATION_ACTION: 'gameNotification',
@@ -29,4 +32,4 @@ export default {
 
     SET_CARDS_SELECTION: 'setCardsSelection',
     SHOW_THROW_ANNOUNCEMENT: 'showThrowAnnouncement'
-}
+};

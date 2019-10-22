@@ -11,11 +11,11 @@ export default {
            name: null
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
         var that = this;
     },
-    updated: function() {
+    updated() {
         /** after render */
     },
     methods: {

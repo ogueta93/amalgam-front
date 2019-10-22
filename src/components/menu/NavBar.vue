@@ -1,27 +1,12 @@
 <template>
-    <b-navbar toggleable="lg" type="dark" variant="light" class="nav-game">
-        <b-navbar-nav left>
-            <i @click="toggleSideBar()" type="dark" class="fas fa-bars side-bar-button"></i>
-        </b-navbar-nav>
-
-        <b-navbar-brand class="ml-auto" center>
-            <b-img :src="require('@/assets/img/logo.png')" width="40px" height="40px" rounded alt="logo"></b-img>
-        </b-navbar-brand>
-
-        <b-navbar-nav class="ml-auto" right>
-            <b-nav-item-dropdown text="Lang" right>
-                <b-dropdown-item href="#">EN</b-dropdown-item>
-                <b-dropdown-item href="#">ES</b-dropdown-item>
-                <b-dropdown-item href="#">RU</b-dropdown-item>
-                <b-dropdown-item href="#">FA</b-dropdown-item>
-            </b-nav-item-dropdown>
-            <b-nav-item-dropdown right>
-                <template slot="button-content"><em>User</em></template>
-                <b-dropdown-item href="#">Profile</b-dropdown-item>
-                <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-            </b-nav-item-dropdown>
-        </b-navbar-nav>
-    </b-navbar>
+    <div class="nav-bar">
+        <div class="nav-bar-control-buttons">
+            <i @click="toggleSideBar()" class="fas fa-bars side-bar-button"></i>
+        </div>
+        <div class="nav-bar-logo">
+            <img :src="require('@/assets/img/logo.png')" class="logo" alt="logo"></img>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -35,15 +20,15 @@ export default {
             content: '#content'
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
         this.$root.$on(EVENT.MENU_TOGGLE_EVENT, this.toggleSideBar);
     },
-    updated: function() {
+    updated() {
         /** after render */
     },
     methods: {
-        toggleSideBar: function() {
+        toggleSideBar() {
             var sideMenuEl = document.querySelector(this.sideMenu);
             var content = document.querySelector(this.content);
 
@@ -56,32 +41,70 @@ export default {
 
 <style lang="scss" scoped>
 /* navbar customization */
-.nav-game {
-    width: 100%;
+$background-color: white;
 
-    .navbar-nav {
-        flex-direction: row;
+.nav-bar {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    background: $background-color;
+
+    .nav-bar-control-buttons {
+        display: flex;
+        width: 10%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+
+        .side-bar-button {
+            font-size: 1.5rem;
+            font-weight: bold; 
+            cursor: pointer;
+        }
+    }
+
+    .nav-bar-logo {
+        display: flex;
+        width: 90%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+
+        .logo {
+            width: 40px;
+            height: 40px;
+        }
     }
 }
 
-.navbar-dark .navbar-nav .nav-link {
-    color: black
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .nav-bar {
+        .nav-bar-logo {
+            .logo {
+                width: 25x;
+                height: 25px;   
+            }
+        }
+    }
 }
 
-.navbar-dark .navbar-nav .nav-link:hover {
-    color: black;
-    font-weight: bold;
-}
-
-.navbar-dark .navbar-nav .show > .nav-link, .navbar-dark .navbar-nav .active > .nav-link, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .nav-link.active {
-    color: black;
-    font-weight: bold;
-}
-
-.side-bar-button {
-    font-size: 20px; 
-    font-weight: bold; 
-    cursor: pointer;
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .nav-bar {
+        .nav-bar-logo {
+            .logo {
+                width: 25x;
+                height: 25px;   
+            }
+        }
+    }
 }
 /* END navbar customization */
 </style>

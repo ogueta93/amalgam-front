@@ -58,7 +58,7 @@ export default {
             userIsWinner: false
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
         this.$webSocket.setEvent(ACTION.SET_CARDS_SELECTION, this.$options.name, this.callBackFindBattle);
         this.$webSocket.setEvent(ACTION.SHOW_THROW_ANNOUNCEMENT, null, this.callBackFindBattle);
@@ -67,13 +67,13 @@ export default {
 
         this.findBattle();
     },
-    destroyed: function() {
+    destroyed() {
         this.$webSocket.$wsOff(ACTION.SET_CARDS_SELECTION, this.$options.name);
         this.$webSocket.$wsOff(ACTION.SHOW_THROW_ANNOUNCEMENT);
 
         this.$root.$off(EVENT.BATTLE_FIELD_FIND_BATTLE);
     },
-    updated: function() {
+    updated() {
         /** after render */
     },
     watch: {
@@ -83,14 +83,14 @@ export default {
         }
     },
     methods: {
-       findBattle: function() {
+       findBattle() {
            var data = {
                battleId: this.battleId
            };
 
            this.$webSocket.sendComplexAction(ACTION.FIND_BATTLE_ACTION, this.$options.name, data, this.callBackFindBattle);
         },
-        setData: function(data) {
+        setData(data) {
             this.$battle.setData(data);
 
             this.data = this.$battle.getData();
@@ -102,7 +102,7 @@ export default {
 
             this.callPhaseEvents();
         },
-        callPhaseEvents: function() {
+        callPhaseEvents() {
             switch (this.battlePhase) {
                 case BATTLE_PHASE.CARD_SELECTION_PHASE:
                     if (this.cardsSelected.length) {
@@ -123,7 +123,7 @@ export default {
             }
         },
 
-        callBackFindBattle: function(response) {
+        callBackFindBattle(response) {
             this.setData(response);
         }
     }
@@ -141,7 +141,7 @@ export default {
         height: 100%;
         width: 100%;
         flex-direction: column;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
 
         .battle-field-deck-selection-resume {
@@ -168,6 +168,45 @@ export default {
         width: 100%;
     }
     
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .battle-field {
+       .battle-field-deck-selection {
+            .battle-field-deck-selection-resume {
+                height: 35%;
+                width: 100%;
+            }
+
+            .battle-field-deck {
+                height: 55%;
+                width: 100%;
+            }
+       }
+   }
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+  
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+   .battle-field {
+       .battle-field-deck-selection {
+            .battle-field-deck-selection-resume {
+                height: 35%;
+                width: 100%;
+            }
+
+            .battle-field-deck {
+                height: 55%;
+                width: 100%;
+            }
+       }
+   }
 }
 /* End battleFieldView customization */
 </style>

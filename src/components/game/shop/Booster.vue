@@ -73,34 +73,34 @@ export default {
             correctlyAdded: false
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
     },
-    updated: function() {
+    updated() {
         /** after render */
     },
     watch: {
-        correctlyAdded: function(value) {
+        correctlyAdded(value) {
             if (value === false) {
                 return;
             }
 
             var that = this;
             var animation = this.$el.querySelector('.booster-content');
-            animation.addEventListener("animationend", function() {
+            animation.addEventListener("animationend", () => {
                 that.canAdd = true;
                 that.correctlyAdded = false;
             });
         }
     },
     methods: {
-        addBooster: function() {
+        addBooster() {
             if (this.canAdd) {
                 this.canAdd = false;
                 this.$root.$emit(EVENT.ADD_BOOSTER, this);
             }
         },
-        openBooster: function() {
+        openBooster() {
             if (this.canOpen) {
                 this.canOpen = false;
                 this.$root.$emit(EVENT.OPEN_BOOSTER, this);
@@ -352,6 +352,192 @@ $booster-user-quantity-background-color: #ad41ff;
     }
     100% {
         background:$add-button-color;
+    }
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .booster-content {
+        height: 270px;
+        width: 200px;
+    }
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .booster-content {
+        height: 125px;
+        width: 125px;
+        border-radius: 0 30px 0 30px;
+
+         &.open-mode {
+            height: 100px;
+            width: 100px;
+            border-radius: 0 30px 0 30px;
+
+            .booster-header {
+                padding: 2px;
+                font-size: 0.5rem;
+                justify-content: flex-start;
+            }
+
+            .booster-body {
+                display: flex;
+                height: 80%;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .booster-user-quantity {
+                position: absolute;
+                display: flex;
+                top: -10px;
+                right: -5px;
+                width: 20px;
+                height: 20px;
+                border-radius: 20px;
+                font-size: 0.7rem;
+            }
+        }
+
+        .not-available {
+            border-radius: 0 30px 0 30px;
+            .not-available-text {
+                padding: 10px;
+                font-size: 0.5rem;
+            }
+        }
+
+        .booster-header {
+            font-size: 0.5rem;
+        }
+        
+        .booster-bottom {
+            .cards-cost {
+                width: 30px;
+                height: 20px;
+                font-size: 2.5rem;
+
+                .card-cost-text {
+                    top: 2px;
+                    width: 30px;
+                    height: 20px;
+                    font-size: 0.4rem;
+                }
+            }
+
+            .cards-win-row-cost {
+                display: flex;
+                width: 15px;
+                height: 15px;
+                font-size: 0.4rem;
+            }
+        }
+
+        .booster-add-button {
+            .add-button {
+                height: 25px;
+                width: 25px;
+                border-radius: 5px;
+            }
+
+            .open-button {
+                height: 25px;
+                width: 25px;
+                border-radius: 5px;
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .booster-content {
+        height: 100px;
+        width: 100px;
+        border-radius: 0 30px 0 30px;
+
+        &.open-mode {
+            height: 100px;
+            width: 100px;
+            border-radius: 0 30px 0 30px;
+
+            .booster-header {
+                padding: 2px;
+                font-size: 0.5rem;
+                justify-content: flex-start;
+            }
+
+            .booster-body {
+                display: flex;
+                height: 80%;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .booster-user-quantity {
+                position: absolute;
+                display: flex;
+                top: -10px;
+                right: -5px;
+                width: 20px;
+                height: 20px;
+                border-radius: 20px;
+                font-size: 0.7rem;
+            }
+        }
+
+        .not-available {
+            border-radius: 0 30px 0 30px;
+            .not-available-text {
+                padding: 10px;
+                font-size: 0.5rem;
+            }
+        }
+
+        .booster-header {
+            font-size: 0.4rem;
+        }
+        
+        .booster-bottom {
+            .cards-cost {
+                width: 30px;
+                height: 20px;
+                font-size: 2.5rem;
+
+                .card-cost-text {
+                    top: 2px;
+                    width: 30px;
+                    height: 20px;
+                    font-size: 0.4rem;
+                }
+            }
+
+            .cards-win-row-cost {
+                display: flex;
+                width: 15px;
+                height: 15px;
+                font-size: 0.4rem;
+            }
+        }
+
+        .booster-add-button {
+            .add-button {
+                height: 25px;
+                width: 25px;
+                border-radius: 5px;
+            }
+
+            .open-button {
+                height: 25px;
+                width: 25px;
+                border-radius: 5px;
+                font-size: 0.8rem;
+            }
+        }
     }
 }
 /* End BoosterComponent customization */

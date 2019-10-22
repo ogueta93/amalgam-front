@@ -22,18 +22,6 @@
                     </template>
                 </li>
             </ul>
-            
-            <ul class="list-unstyled CTAs">
-                <li>
-                    <b-button variant="danger" >Button</b-button>
-                </li>
-                <li>
-                    <b-button variant="success">Button</b-button>
-                </li>
-                <li>
-                    <b-button variant="secondary">Button</b-button>
-                </li>
-            </ul>
         </nav>
     </div>
 </template>
@@ -52,23 +40,23 @@ export default {
             data: sideBarContent
         }
     },
-    mounted: function()
+    mounted()
     {
         /** Initial module instance */
         this.setInitialActive();
     },
-    updated: function()
+    updated()
     {
         /** after render */
     },
     watch: {
-        $route (to, from)
+        $route(to, from)
         {
             this.changeActive(to, from);
         }
     },
     methods: {
-        setInitialActive: function() {
+        setInitialActive() {
             this.active = this.$route.path;
 
             var el = document.querySelector('a[data-href="' + this.active + '"]');
@@ -81,7 +69,7 @@ export default {
                 }
             } 
         },
-        changeActive: function(to, from) {
+        changeActive(to, from) {
             this.active = from.path;
 
             var elementTo = document.querySelector('a[data-href="' + to.path + '"]');
@@ -94,7 +82,7 @@ export default {
                 elementFrom.parentNode.classList.toggle('active');
             }
         },
-        goTo: function(href) {
+        goTo(href) {
             if (href) {
                 this.$router.push(href);
                 this.$root.$emit(EVENT.MENU_TOGGLE_EVENT);
@@ -125,12 +113,6 @@ export default {
             text-align: center;
             text-transform: capitalize;
             font-size: 1.2rem;
-        }
-
-        ul ul a {
-            font-size: 0.7em !important;
-            padding-left: 30px !important;
-            background: #262a2e;
         }
 
         li.active {
@@ -173,8 +155,14 @@ export default {
 
     #sidebar ul li a {
         padding: 10px;
-        font-size: 0.8em;
+        font-size: 0.9rem;
         display: block;
+    }
+
+    #sidebar ul li div ul li a {
+        font-size: 0.8rem;
+        padding-left: 30px;
+        background: #262a2e;
     }
 
     #sidebar ul li a:hover {
@@ -194,10 +182,57 @@ export default {
     left: 0;
 }
 
-@media (max-width: 768px) {
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
     .sidebar-game {
-        width: 150px;
-    }
+       width: 150px;
+       left: -150px;
+
+        #sidebar {
+            .sidebar-title {
+                font-size: 0.9rem;
+            }
+        }
+
+        #sidebar ul li a {
+            padding: 8px;
+            font-size: 0.6rem;
+            display: block;
+        }
+
+        #sidebar ul li div ul li a {
+            font-size: 0.5rem;
+            padding-left: 15px;
+        }
+   }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+   .sidebar-game {
+       width: 150px;
+       left: -150px;
+
+        #sidebar {
+            .sidebar-title {
+                font-size: 0.9rem;
+            }
+        }
+
+        #sidebar ul li a {
+            padding: 8px;
+            font-size: 0.6rem;
+            display: block;
+        }
+
+        #sidebar ul li div ul li a {
+            font-size: 0.5rem;
+            padding-left: 15px;
+        }
+   }
 }
 /* END sidebar customization */
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="login-view-container">
+        <div v-if="isBrowser || pwaMode" class="login-view-container">
         <div class="login-register-container">
             <div class="login-register-buttons">
                 <div :class="['button-container', {active: loginActive}]" @click="changeForm($event)">
@@ -15,32 +15,40 @@
             </div>
         </div>
     </div>
+    <div v-else class="pwa-container">
+        <pwa></pwa>
+    </div>
 </template>
 
 <script>
 import login from '@/components/login/Login';
 import register from '@/components/login/Register';
+import pwa from '@/components/pwa/Pwa';
 
 export default {
     name : 'loginView',
     components: {
         login,
-        register
+        register,
+        pwa
     },
     data() {
         return {
-            loginActive: true
+            loginActive: true,
+            promp: null,
+            isBrowser: this.$root.isBrowser,
+            pwaMode: this.$root.pwaMode
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
         var that = this;
     },
-    updated: function() {
+    updated() {
         /** after render */
     },
     methods: {
-        changeForm: function(event) {
+        changeForm(event) {
             if (event.target.classList.contains('active')) {
                 return false;
             }
@@ -115,5 +123,47 @@ $button-background-color-hover: #1b5baf;
     }
 }
 
+.pwa-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Desktops ----------- */
+@media (min-width: 1281px) { 
+
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+   
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+   .login-view-container {
+        .login-register-container {
+            height: 90%;
+            width: 80%;
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .login-view-container {
+        .login-register-container {
+            height: 90%;
+            width: 80%;
+
+            .login-register-buttons {
+                font-size: 0.7rem;
+            }
+        }
+    }
+}
 /* End LoginView customization */
 </style>

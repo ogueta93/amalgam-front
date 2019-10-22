@@ -5,7 +5,7 @@
         </div>
         <div class="register-content">
             <form class="register-form" id="register-form" name="form" @keyup.enter="submitRegister">
-                <div class="input-group-inline-flex">
+                <div class="input-group-flex inline">
                     <input class="input-form-flex" type="text" name="name" v-model="name" :placeholder="this.$i18n.t('register.namePlaceHolder')" autocomplete="off">
                     <input class="input-form-flex" type="text" name="lastName" v-model="lastName" :placeholder="this.$i18n.t('register.lastNamePlaceHolder')" autocomplete="off">
                 </div>
@@ -41,16 +41,16 @@ export default {
             password: null
         }
     },
-    mounted: function()
+    mounted()
     {
         /** Initial module instance */
     },
-    updated: function()
+    updated()
     {
         /** after render */
     },
     methods: {
-        submitRegister: function() {
+        submitRegister() {
             document.activeElement.blur();
 
             var data = {
@@ -64,7 +64,7 @@ export default {
             this.$webSocket.sendComplexAction(ACTION.REGISTER_ACTION, this.$options.name, data, this.callBackRegister);
         },
 
-        callBackRegister: function(response, error) {
+        callBackRegister(response, error) {
             if (error) {
                 console.log('Error', response);
             } else {
@@ -82,9 +82,9 @@ export default {
     width: 0;
     opacity: 0;
     padding: 40px 0 0 0;
-    align-content: space-between;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
     overflow: hidden;
     transition: opacity 0.5s ease-out;
 
@@ -101,9 +101,10 @@ export default {
         width: 100%;
         align-items: center;
         justify-content: center;
-        font-size: 1.5em;
+        font-size: 1.5rem;
         text-transform: uppercase;
     }
+
     .register-content {
         display: flex;
         height: 85%;
@@ -122,7 +123,7 @@ export default {
                 width: 100%;
                 justify-content: flex-end;
                 color: $primary-color;
-                font-size: 0.8em;
+                font-size: 0.8rem;
             }
         }
 
@@ -136,6 +137,66 @@ export default {
             color:white;
             cursor: pointer;
         }
+    }
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+   .register-container {
+        .register-title {
+            font-size: 1.3rem;
+        }
+
+        .register-content {
+            .submit-button {
+                padding: 5px;
+                font-size: 0.9rem;
+            }
+        }
+    }
+
+    .input-form-flex {
+        font-size: 0.8rem;
+    }
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .register-container {
+        .register-title {
+            font-size: 1.2rem;
+        }
+
+        .register-content {
+            .submit-button {
+                padding: 5px;
+                font-size: 0.9rem;
+            }
+        }
+    }
+
+    .input-form-flex {
+        font-size: 0.8rem;
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .register-container {
+        .register-title {
+            font-size: 1rem;
+        }
+
+        .register-content {
+            .submit-button {
+                padding: 2px;
+                font-size: 0.7rem;
+            }
+        }
+    }
+
+    .input-form-flex {
+        font-size: 0.6rem;
     }
 }
 /* END ReigsterComponent customization */

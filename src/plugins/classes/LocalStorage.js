@@ -3,22 +3,22 @@ export default {
     options: null,
     data: window.localStorage,
 
-    getLocalStorage: function() {
+    getLocalStorage() {
         return this.data;
     },
-    getData: function(key) {
+    getData(key) {
         var data = window.localStorage.getItem(key);
 
         return data === null ? data : JSON.parse(data);
     },
-    setData: function(key, data) {
+    setData(key, data) {
         window.localStorage.setItem(key, JSON.stringify(data));
     },
-    removeData: function(key) {
+    removeData(key) {
         localStorage.removeItem(key);
     },
 
-    getUser: function() {
+    getUser() {
         return this.getData('token').user;
     }
 }

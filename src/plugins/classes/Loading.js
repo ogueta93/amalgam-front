@@ -6,12 +6,12 @@ export default {
     textPrefix: 'loading.messages.',
     loadingElements: [],
 
-    getTemplate: function(text) {
+    getTemplate(text) {
         return "<div class='loading-content'><div class='loading-symbol'>"
-        + "<div class='spinner-grow loading-spinner'></div>"
+        + "<div class='loading-spinner-element'> </div>"
         + "</div><div class='loading-text'>"+ this.translator.t(text) +"</div></div>";
     },
-    appendLoading: function(loadingName) {
+    appendLoading(loadingName) {
         var loading = this.findLoadingByName(loadingName);
 
         var target = document.querySelector(loading.selector);
@@ -27,8 +27,8 @@ export default {
             elLoading.style.zIndex = 1;
         }  
     },
-    findLoadingByName: function(loadingName) {
-        var loading = this.loadingElements.filter(function(obj){
+    findLoadingByName(loadingName) {
+        var loading = this.loadingElements.filter((obj) => {
             if (obj.name === loadingName) {
                 return obj;
             }
@@ -36,7 +36,7 @@ export default {
 
         return loading[0];
     },
-    removeLoadingByName: function(loadingName) {
+    removeLoadingByName(loadingName) {
         for (var i = 0 ; i < this.loadingElements.length; i++)
         {
             if(this.loadingElements[i].name === loadingName) {
@@ -45,7 +45,7 @@ export default {
             }
         }
     },
-    start: function(loadingName, selector, text) {
+    start(loadingName, selector, text) {
         if (this.translator === null) {
             this.translator = this.app.$i18n;
         }
@@ -69,7 +69,7 @@ export default {
 
         this.appendLoading(loadingName);
     },
-    end: function(loadingName) {
+    end(loadingName) {
         var loading = this.findLoadingByName(loadingName);
 
         if (loading) {
@@ -79,7 +79,7 @@ export default {
 
         this.removeLoadingByName(loadingName);
     },
-    clean: function() {
+    clean() {
         this.loadingElements = [];
         var loadingEl = document.querySelector('.loading-content');
         if (loadingEl) {

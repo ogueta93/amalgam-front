@@ -12,56 +12,61 @@ export default {
     regexGameRoute: /^\/game/i,
     token: JSON.parse(window.localStorage.getItem('token')),
     repeatMs: 500,
+    heartBeatMs: 10000,
 
     wsEvents: {},
 
     utils: {
-        utoa: function(str) {
+        utoa: (str) => {
             return window.btoa(unescape(encodeURIComponent(str)));
         }
     },
 
-    start: function() {
+    start() {
         this.socket = new WebSocket(this.webSocketUrl);
         this.__setSocketLogic();
     },
-    checkConnectionStatus: function() {
+    checkConnectionStatus() {
         return this.socket && this.socket.readyState === READY_STATE_OPENED;
     },
 
-    sendAction: function(action, content) {
+    sendAction(action, content) {
         this.__sendWsAction(action, null, content);
     },
-    sendComplexAction: function(action, name, content, callback, callbackError) {
+    sendComplexAction(action, name, content, callback, callbackError) {
         if (!(callback instanceof Function)) {
             throw 'callback must be a Function';
         }
 
         this.__sendWsAction(action, name, content, callback, callbackError);
     },
-    setEvent: function(action, name, callback, callbackError) {
+    setEvent(action, name, callback, callbackError) {
         this.$setWsEvent(action, name, callback, callbackError);
     },
 
-    __setSocketLogic: function() {
+    __setSocketLogic() {
         var that = this;
         // Connection opened
-        this.socket.onopen = function(event) {
+        this.socket.onopen = () => {
             if (that.regexGameRoute.test(that.app.$router.currentRoute.fullPath)) {
                 that.sendAction(ACTION.CHECK_SECURE_CONNECTION_ACTION, {});
             }
+
+            setInterval(() => {
+                that.__heartBeat();
+            }, that.heartBeatMs);
         };
 
-        this.socket.onclose = function(event) {
+        this.socket.onclose = () => {
             console.log(this, 'Connection close');
         };
 
-        this.socket.onerror = function(event) {
+        this.socket.onerror = () => {
             console.log(this, 'Connection error');
         };
 
         // Listen for messages
-        this.socket.onmessage = function (event) {
+        this.socket.onmessage = (event) => {
             var data = JSON.parse(atob(event.data));
 
             if (data.t) {
@@ -69,7 +74,7 @@ export default {
                 that.app.$localStorage.setData('token', that.token);
             }
 
-            data.c.forEach(function(element) {
+            data.c.forEach((element) => {
                 if (element.e)
                 {
                     that.$wsEmit(element.ra, element.e, true);
@@ -81,7 +86,12 @@ export default {
             console.log('Message from server ', data);
         };
     },
-    __sendWsAction: function(action, name, content, callback, callbackError) {
+    __heartBeat() {
+        if (!this.socket) return;
+        if (this.socket.readyState !== 1) return;
+        this.sendAction(ACTION.HEART_BEAT, {});
+    },
+    __sendWsAction(action, name, content, callback, callbackError) {
         var data = {};
         data.a = action;
 
@@ -103,21 +113,21 @@ export default {
 
         this.__processSendMessage(data);
     },
-    __processSendMessage: function(data) {
+    __processSendMessage(data) {
         if (this.checkConnectionStatus()) {
             this.__sendMessage(data);
         } else {
             this.__trySending(data);
         }
     },
-    __sendMessage: function(data) {
+    __sendMessage(data) {
         console.log('message send', data);
         this.socket.send(this.utils.utoa(JSON.stringify(data)));
     },
-    __trySending: function(data) {
+    __trySending(data) {
         var that = this;
 
-        var connectionIntervarl = setInterval(function() {
+        var connectionIntervarl = setInterval(() => {
             console.log('reconneting', data);
             if (that.checkConnectionStatus()) {
                 clearInterval(connectionIntervarl);
@@ -128,10 +138,10 @@ export default {
         }, this.repeatMs);
     },
 
-    $setWsEvent: function(action, name, callback, callbackError, once) {
+    $setWsEvent(action, name, callback, callbackError, once) {
         var that = this;
 
-        var callbackEvent = function(response, error) {
+        var callbackEvent = (response, error) => {
             if (error) {
                 if (callbackError instanceof Function) {
                     callbackError(response);
@@ -151,7 +161,7 @@ export default {
             this.$wsOn(action, name, callbackEvent);
         }
     },
-    $wsOn: function(name, identifier, fn) {
+    $wsOn(name, identifier, fn) {
         var event = {
             fn: fn,
             identifier: identifier
@@ -160,7 +170,7 @@ export default {
         if (this.wsEvents[name] !== undefined) {
             var finded = false;
 
-            this.wsEvents[name].forEach(function(wsEvent) {
+            this.wsEvents[name].forEach((wsEvent) => {
                 if (wsEvent.identifier === event.identifier) {
                     finded = true;
                     return;
@@ -174,7 +184,7 @@ export default {
            this.wsEvents[name] = [event];
         }
     },
-    $wsOnce: function(name, identifier, fn) {
+    $wsOnce(name, identifier, fn) {
         var that = this;
 
         var onceFn = function() {
@@ -184,27 +194,27 @@ export default {
 
         this.$wsOn(name, identifier, onceFn);
     },
-    $wsEmit: function(name) {
+    $wsEmit(name) {
         var that = this;
         var params = Array.prototype.slice.call(arguments);
 
-        params = params.filter(function(element, index) {
+        params = params.filter((element, index) => {
             return index !== 0;
         });
 
         var wsEvent = this.wsEvents[name];
         if (wsEvent) {
-            wsEvent.forEach(function(event) {
+            wsEvent.forEach((event) => {
                 event.fn.apply(that, params);
                 return;
             });
         }
     },
-    $wsOff: function(name, identifier) {
+    $wsOff(name, identifier) {
         if (identifier === undefined) {
             delete this.wsEvents[name];
         } else if (this.wsEvents[name] !== undefined) {    
-            var events = this.wsEvents[name].filter(function(wsEvent) {
+            var events = this.wsEvents[name].filter((wsEvent) => {
                 return wsEvent.identifier !== identifier;
             });
 

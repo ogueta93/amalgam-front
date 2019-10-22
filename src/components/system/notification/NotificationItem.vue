@@ -116,63 +116,63 @@ export default {
             componentNameEvent: this.$options.name + '-' + this.data.id
         }
     },
-    mounted: function() {
+    mounted() {
         var that = this;
         /** Initial module instance */
         this.$webSocket.setEvent(ACTION.REFUSE_BATTLE_ACTION, this.componentNameEvent, this.closeNotificationByBattleId)
         this.$webSocket.setEvent(ACTION.ACCEPT_BATTLE_ACTION, this.componentNameEvent, this.closeNotificationByBattleId)
 
         if (this.data.visibility) {
-            setTimeout(function() {
+            setTimeout(() => {
                 that.$el.classList.toggle('visible');
             }, 100);
         }
     },
-    destroyed: function() {
+    destroyed() {
         this.$webSocket.$wsOff(ACTION.REFUSE_BATTLE_ACTION, this.componentNameEvent);
         this.$webSocket.$wsOff(ACTION.ACCEPT_BATTLE_ACTION, this.componentNameEvent);
     },
     watch: {
-        'data.visibility': function() {
+        'data.visibility'() {
             this.$el.classList.toggle('visible');
         }
     },
     methods: {
-        closeNotification: function() {
+        closeNotification() {
             var that = this;
 
-            this.$el.addEventListener('transitionend', function(){
+            this.$el.addEventListener('transitionend', () => {
                 that.$root.$emit(EVENT.CLOSE_NOTIFICATION_EVENT, that.data.id); 
             });
 
             this.$el.classList.toggle('visible');
         },
-        closeNotificationByBattleId: function(response) {
+        closeNotificationByBattleId(response) {
             if (this.data.battleId !== undefined && this.data.battleId === response.id) {
                 this.closeNotification();
             }
         },
-        acceptChallenge: function() {
+        acceptChallenge() {
             var that = this;
 
             var eventIdentificator = this.componentNameEvent + '-button';
             var data = {
                 battleId: this.data.battleId
             };
-            var callback = function(response) {
+            var callback = (response) => {
                 that.$router.push({path: `/game/battle/${response.id}`});
             };
 
             this.$webSocket.sendComplexAction(ACTION.ACCEPT_BATTLE_ACTION, eventIdentificator, data, callback);
         },
-        refuseBattle: function() {
+        refuseBattle() {
             var data = {
                 battleId: this.data.battleId
             };
 
             this.$webSocket.sendAction(ACTION.REFUSE_BATTLE_ACTION, data);
         },
-        goToChallenge: function() {
+        goToChallenge() {
             this.$router.push('/game/battle/' + this.data.battleId);
             this.closeNotification();
         },
@@ -217,7 +217,7 @@ $battle-reward-claimed-notification-light-color: #424b52;
         width: 10%;
         justify-content: center;
         align-items: center;
-        font-size: 1.5em;
+        font-size: 1.5rem;
     }
 
     .notification-item-content {
@@ -230,7 +230,7 @@ $battle-reward-claimed-notification-light-color: #424b52;
         font-family: 'Audiowide', cursive;
         
         .notification-item-message {
-            font-size: 0.9em;
+            font-size: 0.9rem;
             margin: 0 0 10px 0;
         }
 
@@ -238,7 +238,7 @@ $battle-reward-claimed-notification-light-color: #424b52;
             display: flex;
             flex-direction: row;
             justify-content: space-evenly;
-            font-size: 0.8em;
+            font-size: 0.8rem;
             text-transform: uppercase;
 
             .notification-button {
@@ -258,7 +258,7 @@ $battle-reward-claimed-notification-light-color: #424b52;
         top: 0;
         right: 0;
         padding: 5px 10px 0 0;
-        font-size: 1.5em;
+        font-size: 1.5rem;
         color: white;
         cursor: pointer;
     }
@@ -343,6 +343,53 @@ $battle-reward-claimed-notification-light-color: #424b52;
                     background-color: $battle-reward-claimed-notification-dark-color;
                 }
             }
+        }
+    }
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .notification-item {
+        height: 60px;
+        padding: 5px;
+        margin: 2px 0 2px 0;
+
+        .notification-item-icon {
+            font-size: 0.8rem;
+        }
+
+        .notification-item-content {
+            padding: 5px;
+            
+            .notification-item-message {
+                font-size: 0.5rem;
+                margin: 0 0 5px 0;
+            }
+
+            .notification-item-buttons {
+                font-size: 0.5rem;
+
+                .notification-button {
+                    height: 15px;
+                    padding: 5px;
+                    box-shadow: 0 5px 5px -4px rgba(0, 0, 0, 0.6);
+                }
+            }
+        }
+        
+        .notification-close-button {
+            padding: 3px 5px 0 0;
+            font-size: 0.8rem;
+            color: white;
+            cursor: pointer;
         }
     }
 }

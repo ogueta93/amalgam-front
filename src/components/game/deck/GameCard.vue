@@ -85,7 +85,7 @@ export default {
             debugAddingCard: false
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
         if (this.battlePhase === BATTLE_PHASE.BATTLE_PHASE && !this.faceDown) {
             this.playerInfo = this.$battle.getPlayerOwnership(this.card.userCardId);
@@ -104,7 +104,7 @@ export default {
             this.cardRewardedSelected = true;
         }
     },
-    updated: function() {
+    updated() {
         /** after render */
     },
     watch: {
@@ -113,7 +113,7 @@ export default {
         }
     },
     methods: {
-        cardAction: function() {
+        cardAction() {
             if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE) {
                 this.setToPlay();
             }
@@ -127,7 +127,7 @@ export default {
                 this.setToPay();
             }
         },
-        debubAddCard: function(id) {
+        debubAddCard(id) {
             if (this.debugAddingCard) {
                 return;
             }
@@ -138,27 +138,27 @@ export default {
             };
             this.$webSocket.sendComplexAction(ACTION.DEBUG_ADD_CARD_ACTION, this.$options.name, data, this.callBackDebugAddCard);
         },
-        setToPlay: function() {
+        setToPlay() {
             this.card.selected = !this.card.selected;
             this.$root.$emit(EVENT.BATTLE_DECK_SELECTION, this.card.userCardId);
         },
-        setToPay: function() {
+        setToPay() {
             this.card.selected = !this.card.selected;
             this.$root.$emit(EVENT.SHOP_DECK_SELECTION, this.card.userCardId);
         },
-        playCard: function() {
+        playCard() {
             if (this.isPlayableCard && this.$battle.isPlayerTurn(this.playerInfo.id)) {
                 this.card.selectedInbattle = !this.card.selectedInbattle;
                 this.$root.$emit(EVENT.BATTLE_ARENA_PLAY_CARD, this.card.userCardId);
             }
         },
-        setReward: function() {
+        setReward() {
             this.cardRewardedSelected = !this.cardRewardedSelected;
 
             var data = this.cardRewardedSelected ? this : null;
             this.$root.$emit(EVENT.BATTLE_REWARD_SELECTION, data);
         },
-        getCardBattleColor: function() {
+        getCardBattleColor() {
             var playerTurn = this.$battle.getInitialTurn(this.playerInfo.id);
 
             if (playerTurn === 1 && !this.card.captured) {
@@ -169,7 +169,7 @@ export default {
                 return 'secondary';
             }
         },
-        getCardBattleColorWithOutRefence: function() {
+        getCardBattleColorWithOutRefence() {
             var hostUserId = this.$localStorage.getUser().id;
             var hostPlayerTurn = this.$battle.getInitialTurn(hostUserId);
 
@@ -179,17 +179,17 @@ export default {
                 return 'primary';
             }
         },
-        getCardOwnership: function() {
+        getCardOwnership() {
             return this.playerInfo.id === this.$localStorage.getUser().id;
         },
 
-        callBackDebugAddCard: function(response) {
+        callBackDebugAddCard(response) {
             var that = this;
 
             var addButton = this.$el.querySelector('.add-button');
             addButton.classList.add('success-adding');
 
-            addButton.addEventListener('animationend', function() {
+            addButton.addEventListener('animationend', () => {
                 addButton.classList.remove('success-adding');
                 that.debugAddingCard = false;
             });            
@@ -232,7 +232,7 @@ $add-button-success-color: #3cbd82;
     }
     &.selected-in-battle {
         box-shadow: 0px 0px 0px 5px $card-selected-in-battle-color;
-        margin-left: 75px;
+        margin-bottom: 75px;
     } 
     
     &.battleCard {
@@ -247,7 +247,7 @@ $add-button-success-color: #3cbd82;
         }
 
         &.playable-card:hover {
-            margin-left: 75px;
+            margin-bottom: 75px;
         }
         &.recently-placed {
             animation: recentlyPlaced 0.5s linear;
@@ -295,9 +295,8 @@ $add-button-success-color: #3cbd82;
     }
 
     &.opened-mode {
-
         margin: 10px;
-        box-shadow: 0px 0px 6px 8px $card-shadow-rewarded-color;
+        box-shadow: 0px 0px 3px 5px $card-shadow-rewarded-color;
     }
 
     .game-card-content {
@@ -510,6 +509,259 @@ $add-button-success-color: #3cbd82;
 
     100% {
         transform: rotateY(0deg) rotateZ(0deg);
+    }
+}
+
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .game-card {
+        &.battleCard {
+            height: 115px;
+            width: 140px;
+
+            .game-card-content {
+                .game-card-body {
+                    font-size: 0.8rem;
+                }
+            }
+        }
+
+        &.opened-mode {
+            width: 105px;
+            height: 175px;
+            margin: 10px;
+            box-shadow: 0px 0px 3px 3px $card-shadow-rewarded-color;
+
+            .game-card-content {
+                .game-card-header {
+                    .game-card-name {
+                        font-size: 0.5rem;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
+                    .game-card-id {
+                        font-size: 0.3rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .game-card {
+        width: 75px;
+        height: 125px;
+        padding: 2px;
+        margin: 2px;
+
+        &.selected {
+            box-shadow: 0px 0px 0px 1px $card-selected-color;
+        }
+
+
+        &.selected-in-battle {
+            box-shadow: 0px 0px 0px 1px $card-selected-in-battle-color;
+            margin-bottom: 30px;
+        }
+
+        &.rewardMode {
+            box-shadow: 0px 0px 6px 6px $card-shadow-rewarded-color;
+        }
+
+        &.rewardMode.rewardSelected {
+            box-shadow: 0px 0px 6px 6px $card-shadow-rewarded-selected-color;
+            margin-bottom: 50px;
+        }
+
+        &.battleCard {
+            height: 60px;
+            width: 70px;
+            padding: 4px;
+
+            .game-card-content {
+                .game-card-body {
+                    font-size: 0.4rem;
+                }
+            }
+
+            &.playable-card:hover {
+                margin-bottom: 30px;
+            }
+        }
+
+        .game-card-content {
+            .game-card-header {
+                .game-card-name {
+                    font-size: 0.4rem;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+                .game-card-id {
+                    font-size: 0.2rem;
+                }
+            }
+
+            .game-card-body {
+                font-size: 0.5rem;
+            }
+        }
+
+        &.opened-mode {
+            margin: 5px;
+            box-shadow: 0px 0px 3px 3px $card-shadow-rewarded-color;
+
+            .game-card-content {
+                .game-card-header {
+                    .game-card-name {
+                        font-size: 0.2rem;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
+                    .game-card-id {
+                        font-size: 0.1rem;
+                    }
+                }
+            }
+        }
+
+        &.shop-mode {
+            width: 50px;
+            height: 100px;
+            padding: 1px;
+            margin: 3px;
+
+            &.selected {
+                box-shadow: 0px 0px 0px 2px $card-selected-color;
+            }
+
+            .game-card-content {
+                .game-card-header {
+                    .game-card-name {
+                        font-size: 0.2rem;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
+                }
+
+                .game-card-body {
+                    font-size: 0.3rem;
+                }
+            }
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .game-card {
+        width: 75px;
+        height: 125px;
+        padding: 2px;
+        margin: 2px;
+
+        &.selected {
+            box-shadow: 0px 0px 0px 1px $card-selected-color;
+        }
+
+        &.selected-in-battle {
+            box-shadow: 0px 0px 0px 1px $card-selected-in-battle-color;
+            margin-bottom: 30px;
+        } 
+
+        &.rewardMode {
+            box-shadow: 0px 0px 6px 6px $card-shadow-rewarded-color;
+        }
+
+        &.rewardMode.rewardSelected {
+            box-shadow: 0px 0px 6px 6px $card-shadow-rewarded-selected-color;
+            margin-bottom: 50px;
+        }
+
+        &.battleCard {
+            height: 60px;
+            width: 70px;
+            padding: 4px;
+
+            .game-card-content {
+                .game-card-body {
+                    font-size: 0.4rem;
+                }
+            }
+
+            &.playable-card:hover {
+                margin-bottom: 30px;
+            }
+        }
+
+        .game-card-content {
+            .game-card-header {
+                .game-card-name {
+                    font-size: 0.3rem;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+                .game-card-id {
+                    font-size: 0.2rem;
+                }
+            }
+
+            .game-card-body {
+                font-size: 0.5rem;
+            }
+        }
+
+        &.opened-mode {
+            width: 50px;
+            height: 100px;
+            padding: 1px;
+            margin: 5px;
+            box-shadow: 0px 0px 3px 3px $card-shadow-rewarded-color;
+
+            .game-card-content {
+                .game-card-header {
+                    .game-card-name {
+                        font-size: 0.2rem;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
+                    .game-card-id {
+                        font-size: 0.1rem;
+                    }
+                }
+
+                .game-card-body {
+                    font-size: 0.3rem;
+                }
+            }
+        }
+
+        &.shop-mode {
+            width: 50px;
+            height: 100px;
+            padding: 1px;
+            margin: 3px;
+
+            &.selected {
+                box-shadow: 0px 0px 0px 2px $card-selected-color;
+            }
+
+            .game-card-content {
+                .game-card-header {
+                    .game-card-name {
+                        font-size: 0.2rem;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
+                }
+
+                .game-card-body {
+                    font-size: 0.3rem;
+                }
+            }
+        }
     }
 }
 /* End Card customization */

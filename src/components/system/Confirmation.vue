@@ -40,14 +40,14 @@ export default {
             confirmationTitle: null,
         }
     },
-    mounted: function()
+    mounted()
     {
         /** Initial module instance */
         this.$root.$on(EVENT_CONSTANTS.CONFIRMATION_EVENT, this.callBackProcessConfirmation);
         this.el = document.querySelector('.app-confirmation');
     },
     methods: {
-        callBackProcessConfirmation: function(confirmationId) {
+        callBackProcessConfirmation(confirmationId) {
             this.confirmationId = confirmationId;
             this.confirmationTitle = this.$i18n.t(this.confirmationTitlePrefix + confirmationId);;
             this.confirmationMsg =  this.$i18n.t(this.confirmationMsgPrefix + confirmationId);
@@ -55,13 +55,13 @@ export default {
             this.el.style.display = 'flex';
             this.$loading.clean();
         },
-        closeConfirmation: function() {
+        closeConfirmation() {
             this.el.style.display = 'none';
             this.confirmationId = null;
             this.confirmationMsg = null;
             this.confirmationTitle = null;
         },
-        confirmationButton: function() {
+        confirmationButton() {
             switch (this.confirmationId) {
                 default:
                     break;
@@ -69,7 +69,7 @@ export default {
 
             this.closeConfirmation();
         },
-        goToInventory: function() {
+        goToInventory() {
             this.$router.push('/game/shopInventory');
             this.closeConfirmation();
         }
@@ -152,10 +152,45 @@ $confirmation-color-button: #508cda;
     }
 }
 
-@media (max-width: 768px) {
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .confirmation-content {
+        height: 50%;
+        width: 60%;
+
+        .confirmation-body {
+            .confirmation-text {
+                font-size: 11px;
+            }
+        }
+    }
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
     .confirmation-content {
         height: 80%;
         width: 80%;
+
+        .confirmation-body {
+            .confirmation-text {
+                font-size: 10px;
+            }
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .confirmation-content {
+        height: 80%;
+        width: 80%;
+
+        .confirmation-body {
+            .confirmation-text {
+                font-size: 10px;
+            }
+        }
     }
 }
 /* END confirmationComponent customization */
