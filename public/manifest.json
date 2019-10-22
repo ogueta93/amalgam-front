@@ -2,10 +2,13 @@
     "name": "Amalgam",
     "short_name": "Amalgam",
     "icons": [
+	 {
+      		"src": "app_icon_192x192_original.png",
+      		"type": "image/png",
+      		"sizes": "192x192"
+    	}
     ],
     "start_url": "/",
     "display": "fullscreen",
-    "orientation": "portrait",
-    "background_color": "#2196f3",
-    "theme_color": "#2196f3"
+    "orientation": "landscape"
 }

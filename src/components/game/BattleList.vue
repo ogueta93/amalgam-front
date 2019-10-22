@@ -1,7 +1,7 @@
 <template>
     <div class="game-content">
         <div class="game-content-header">
-            <div class="game-header-title">{{ $t("battleListHeader") }}</div>
+            <div class="game-header-title">{{ $t("battleList.battleListHeader") }}</div>
             <div class="game-header-controls">
                 <i type="dark" class="fas fa-bars side-bar-button"></i>
             </div>
@@ -27,7 +27,7 @@
                         </div>
                         <div class="battle-actions">
                             <div v-if="battle.action == suitableActions.wait" class="battle-wait-spinner">
-                                  <b-spinner variant="primary" label="waitting"></b-spinner>
+                                <i class="fas fa-circle-notch"></i>
                             </div>
                             <div v-if="battle.action == suitableActions.choose" class="battle-accept-button" @click="acceptBattle(battle.id)">
                                 <i class="fas fa-check-square"></i>
@@ -75,7 +75,7 @@ export default {
             battlePhase: BATTLE_PHASE
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
         this.getUserBattleList();
 
@@ -83,13 +83,13 @@ export default {
         this.$webSocket.setEvent(ACTION.REFUSE_BATTLE_ACTION, this.$options.name, this.getUserBattleList);
         this.$webSocket.setEvent(ACTION.ACCEPT_BATTLE_ACTION, this.$options.name, this.getUserBattleList);
     },
-    destroyed: function() {
+    destroyed() {
         this.$webSocket.$wsOff(ACTION.NEW_BATTLE_ACTION, this.$options.name);
         this.$webSocket.$wsOff(ACTION.REFUSE_BATTLE_ACTION, this.$options.name);
         this.$webSocket.$wsOff(ACTION.ACCEPT_BATTLE_ACTION, this.$options.name);
     },
     methods: {
-        getUserBattleList: function() {
+        getUserBattleList() {
             var data = {
                 type: this.battleTypes[this.$route.params.type.toUpperCase()]
             }
@@ -97,11 +97,11 @@ export default {
             this.$webSocket.sendComplexAction(ACTION.GET_USER_BATTLE_LIST_ACTION, this.$options.name, data, this.callBackGetUserBattleList);
             this.$loading.start(this.loadings.getUserBattleList, '.battle-chamber-list');
         },
-        getBattleList: function() {
+        getBattleList() {
             var that = this;
             var list = [];
 
-            this.battleResults.forEach(function(element, index){
+            this.battleResults.forEach((element, index) => {
                 var battlePhase = element.data.progress !== undefined ? element.data.progress.main.phase : null;
                 
                 list.push(
@@ -118,11 +118,11 @@ export default {
 
             return list.length > 0 ? list : null;
         },
-        getAdversary: function(users) {
+        getAdversary(users) {
             var adversary = null;
             var currentUser = this.$localStorage.getUser();
 
-            users.forEach(function(element) {
+            users.forEach((element) => {
                 if (element.user.id !== currentUser.id) {
                     adversary = element.user;
                     return;
@@ -131,7 +131,7 @@ export default {
 
             return adversary;
         },
-        getSuitableAction: function(element) {
+        getSuitableAction(element) {
             var currentUser = this.$localStorage.getUser();
 
             if (element.data.createdBy.id === currentUser.id && element.data.status.id === this.battleStatus.PENDING) {
@@ -142,14 +142,14 @@ export default {
                 return this.suitableActions.figth;
             }
         },
-        refuseBattle: function(battleId) {
+        refuseBattle(battleId) {
             var data = {
                 battleId: battleId
             };
 
             this.$webSocket.sendAction(ACTION.REFUSE_BATTLE_ACTION, data);
         },
-        acceptBattle: function(battleId) {
+        acceptBattle(battleId) {
             var data = {
                 battleId: battleId
             };
@@ -157,17 +157,17 @@ export default {
             var eventIdentificator = this.$options.name + "-manual";
             this.$webSocket.sendComplexAction(ACTION.ACCEPT_BATTLE_ACTION, eventIdentificator, data, this.callBackAcceptBattle);
         },
-        goToBattle: function(battleId) {
+        goToBattle(battleId) {
             this.$router.push('/game/battle/' + battleId);
         },
 
-        callBackGetUserBattleList: function(response) {
+        callBackGetUserBattleList(response) {
             this.battleResults = response;
-            console.log(this.battleResults);
             this.battleList = this.getBattleList();
+
             this.$loading.end(this.loadings.getUserBattleList);
         },
-        callBackAcceptBattle: function(response) {
+        callBackAcceptBattle(response) {
             this.goToBattle(response.id);
         }
     }
@@ -207,7 +207,7 @@ $battle-vs-text-color: #1a73e8;
             align-items: center;
 
             .battle-status-icon {
-                font-size: 1.5em;
+                font-size: 1.5rem;
                 margin-right: 20px;
             }
 
@@ -219,7 +219,7 @@ $battle-vs-text-color: #1a73e8;
         .battle-rival {
             .battle-vs {
                 color: $battle-vs-text-color;
-                font-size: 1.5em;
+                font-size: 1.5rem;
                 font-weight: bold;
                 margin-right: 20px;
             }
@@ -230,42 +230,205 @@ $battle-vs-text-color: #1a73e8;
             height: 100%;
             flex-direction: column;
             justify-content: center;
-            font-size: 1.2em;
+            font-size: 1.2rem;
             cursor: pointer;
 
             .battle-wait-spinner {
                 cursor: default;
-                
-                .spinner-border {
-                    width: 1.3rem;
-                    height: 1.3rem;
-                }
+                color: $battle-fight-button-color;
+                font-size: 1.2rem;
+                animation: battle-wait-spinner-animation linear 1s infinite;
             }
 
             .battle-accept-button {
                 color: $battle-accept-button-color;
                 &:hover {
-                    font-size: 1.3em;
+                    font-size: 1.3rem;
                 }
             }
 
             .battle-refuse-button {
                 color: $battle-refuse-button-color;
                 &:hover {
-                    font-size: 1.3em;
+                    font-size: 1.3rem;
                 }
             }
 
             .battle-fight-button {
                 color: $battle-fight-button-color;
-                font-size: 1.3em;
+                font-size: 1.3rem;
                 &:hover {
-                    font-size: 1.5em;
+                    font-size: 1.5rem;
                 }
             }
         }
     }
+}
+
+.battle-list-paginator {
+    height: 10%;
+    width: 100%;
+}
+
+@keyframes battle-wait-spinner-animation {
+    from {
+          transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+     .game-content {
+        .game-content-header {
+            .game-header-title, .game-header-controls {
+                font-size: 0.8rem;
+            }
+        }
+    }
+
+    .battle-list-content {
+        .battle-list-item {
+            height: 40px;
+            margin: 3px 0 3px 0;
+            padding: 5px 5px 5px 5px;
+
+            .battle-last-update {
+                font-size: 0.5rem;
+            }
+
+            .battle-status {
+                margin-right: 10px;
+                .battle-status-icon {
+                    font-size: 0.7rem;
+                    margin-right: 10px;
+                }
+
+                .battle-status-text {
+                    font-size: 0.7rem;
+                }
+            }
+
+            .battle-rival {
+                font-size: 0.7rem;
+                .battle-vs {
+                    font-size: 0.7rem;
+                }
+            }
+
+            .battle-actions {
+                .battle-wait-spinner {                
+                    font-size: 0.7rem;
+                }
+
+                .battle-accept-button {
+                    font-size: 0.7rem;
+                    &:hover {
+                        font-size: 1rem;
+                    }
+                }
+
+                .battle-refuse-button {
+                    font-size: 0.7rem;
+                    &:hover {
+                        font-size: 1rem;
+                    }
+                }
+
+                .battle-fight-button {
+                    font-size: 0.7rem;
+                    &:hover {
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
+
+    }
+
     .battle-list-paginator {
+        font-size: 0.7rem;
+        height: 10%;
+        width: 100%;
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .game-content {
+        .game-content-header {
+            .game-header-title, .game-header-controls {
+                font-size: 0.8rem;
+            }
+        }
+    }
+
+    .battle-list-content {
+        .battle-list-item {
+            height: 40px;
+            margin: 3px 0 3px 0;
+            padding: 5px 5px 5px 5px;
+
+            .battle-last-update {
+                font-size: 0.5rem;
+            }
+
+            .battle-status {
+                margin-right: 10px;
+                .battle-status-icon {
+                    font-size: 0.7rem;
+                    margin-right: 10px;
+                }
+
+                .battle-status-text {
+                    font-size: 0.7rem;
+                }
+            }
+
+            .battle-rival {
+                font-size: 0.7rem;
+                .battle-vs {
+                    font-size: 0.7rem;
+                }
+            }
+
+            .battle-actions {
+                .battle-wait-spinner {                
+                    font-size: 0.7rem;
+                }
+
+                .battle-accept-button {
+                    font-size: 0.7rem;
+                    &:hover {
+                        font-size: 1rem;
+                    }
+                }
+
+                .battle-refuse-button {
+                    font-size: 0.7rem;
+                    &:hover {
+                        font-size: 1rem;
+                    }
+                }
+
+                .battle-fight-button {
+                    font-size: 0.7rem;
+                    &:hover {
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
+
+    }
+
+    .battle-list-paginator {
+        font-size: 0.7rem;
         height: 10%;
         width: 100%;
     }

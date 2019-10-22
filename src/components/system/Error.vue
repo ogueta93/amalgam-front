@@ -31,18 +31,18 @@ export default {
             phase: null
         }
     },
-    mounted: function()
+    mounted()
     {
         /** Initial module instance */
         this.el = document.querySelector('.app-error');
         this.$root.$on(EVENT_CONSTANTS.ERROR_EVENT, this.callBackProcessError);
     },
-    updated: function()
+    updated()
     {
         /** after render */
     },
     methods: {
-        callBackProcessError: function(data) {
+        callBackProcessError(data) {
             this.errorTitle = data.title;
             this.errorMsg =  this.$i18n.t(this.errorPrefix + data.message);
             
@@ -56,7 +56,7 @@ export default {
 
             throw this.errorMsg;
         },
-        errorButton: function() {
+        errorButton() {
             var that = this;
 
             this.el.style.display = 'none';
@@ -143,10 +143,45 @@ $error-border-color: #c8ced3;
     }
 }
 
-@media (max-width: 768px) {
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .error-content {
+        height: 50%;
+        width: 60%;
+
+        .error-body {
+            .error-text {
+                font-size: 11px;
+            }
+        }
+    }
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
     .error-content {
         height: 80%;
         width: 80%;
+
+        .error-body {
+            .error-text {
+                font-size: 10px;
+            }
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .error-content {
+        height: 80%;
+        width: 80%;
+
+        .error-body {
+            .error-text {
+                font-size: 10px;
+            }
+        }
     }
 }
 /* END Error customization */

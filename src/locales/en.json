@@ -16,6 +16,10 @@
         }
     },
 
+    "battleList": {
+        "battleListHeader": "Battle List"
+    },
+
     "battleReward": {
         "claimRewardButton": "Claim Reward",
 
@@ -125,6 +129,12 @@
         "goToBattle": "Go To Battle",
         "refuse": "Refuse",
         "timeLimitTitle": "Time Limit"
+    },
+
+    "pwa": {
+        "acceptedInstallMsg": "Thank you! Enjoy Amalgam.",
+        "availableMsg": "Enjoy Amalgam on your tablet or mobile now. Install our progressive web application and have fun.",
+        "nonAvailableMsg": "Amalgam is already installed in your device or your browser has not PWA Event compatibility. Please use Chrome or check how to install progressive web application with your current browser."
     },
 
     "resumeSelection": {

@@ -1,9 +1,6 @@
 import Vue from 'vue';
-import VueAxios from 'vue-axios';
-import Axios from 'axios';
-import BootstrapVue from 'bootstrap-vue';
 
-Vue.use(VueAxios, Axios);
+import BootstrapVue from 'bootstrap-vue';
 Vue.use(BootstrapVue);
 
 /** App Components */
@@ -36,13 +33,25 @@ const vue = new Vue({
         return {
             locale: navigator.languages[0],
             lang: navigator.languages[1],
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-        }
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            isBrowser: !(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())),
+            pwaMode: window.matchMedia('(display-mode: fullscreen)').matches
+        };
     },
-    mounted: function()
-    {
-        i18n.locale = this.lang,
+    mounted() {
+        i18n.locale = this.lang;
         this.$webSocket.start();
+
+        if (this.pwaMode) {
+            var viewport = document.querySelector("meta[name=viewport]");
+            viewport.setAttribute('content', 'width=device-width, height='+ window.innerHeight +', initial-scale=1.0');
+
+            window.addEventListener("orientationchange", () => {
+                window.setTimeout(() => {
+                    viewport.setAttribute('content', 'width=device-width, height='+ window.innerHeight +', initial-scale=1.0');
+                }, 200);
+            });
+        }
     }
 });
 

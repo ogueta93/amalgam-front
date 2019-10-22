@@ -4,19 +4,17 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "rm -rf dist/ public && vue-cli-service build && ln -s dist public",
+    "build": "rm -rf dist/ && vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
-    "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.17",
     "jshint": "^2.10.2",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
     "vue": "^2.6.10",
-    "vue-axios": "^2.1.4",
     "vue-i18n": "^8.0.0",
     "vue-loader": "^15.7.0",
     "vue-router": "^3.0.2"

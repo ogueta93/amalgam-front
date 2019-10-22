@@ -9,16 +9,22 @@
         <div class="game-content-freeCards">
             <div class="freeCards-filters">
                 <div class="freeCards-filters-content">
-                    <b-form inline @submit="onSubmit">
-                        <b-form-group class="marging-element" :label="$t('freeCards.cardNameFilter')">
-                            <b-input-group>
-                                <b-form-input v-model="filters.cardName"></b-form-input>
-                            </b-input-group>
-                        </b-form-group>
-                        <b-form-group class="marging-element" :label="$t('freeCards.cardTypeFilter')">
-                            <b-form-select :options="typeCardOptions" v-model="filters.cardType"></b-form-select>
-                        </b-form-group>
-                    </b-form>
+                    <form id="freeCards-search-form" name="form" @submit.prevent="onSubmit">
+                        <div class="input-group-flex inline">
+                            <div class="include-label sm">
+                                <div class="input-label">{{ $t('freeCards.cardNameFilter') }}</div>
+                                <input class="input-form-flex" type="text" v-model="filters.cardName">
+                            </div>
+                             <div class="include-label sm">
+                                <div class="input-label">{{ $t('freeCards.cardTypeFilter') }}</div>
+                                <select class="input-form-flex margin-left" v-model="filters.cardType">
+                                    <option v-for="option in typeCardOptions" v-bind:key="option.value" v-bind:value="option.value">
+                                        {{ option.text }}
+                                    </option>
+                                </select>
+                            </div>                            
+                        </div>
+                    </form>
                 </div>
                 <div class="freeCards-filters-bottom">
                     <div @click="getCards" class="fa-button">
@@ -65,23 +71,23 @@ export default {
             ]
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
         this.getCards();
     },
-    destroyed: function() {
+    destroyed() {
     },
     methods: {
-        onSubmit: function(evt) {
+        onSubmit(evt) {
             evt.preventDefault();
             
             this.getCards();
         },
-        toggleFilters: function() {
+        toggleFilters() {
             document.querySelector('.freeCards-filters').classList.toggle('show-filters');
             document.querySelector('.freeCards-cards').classList.toggle('show-filters');
         },
-        getCards: function() {
+        getCards() {
             document.activeElement.blur();
 
             var filters = {
@@ -93,7 +99,7 @@ export default {
             this.$loading.start(this.loadingName);
         },
 
-        callBackGetCards: function(response) {
+        callBackGetCards(response) {
             var that = this;
             this.cards = response;
 

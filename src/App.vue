@@ -26,12 +26,13 @@ export default {
     },
     data() {
         return {
+            
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
     },
-    updated: function() {
+    updated() {
         /** after render */
     },
     methods: {

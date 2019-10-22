@@ -266,5 +266,28 @@ $winner-gradient-color: #1fd88b;
         background-position: 400%;
     }
 }
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .battle-announcement-content {
+        .announcement-text {
+            font-size: 2rem;
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .battle-announcement-content {
+        .announcement-text {
+            font-size: 1.5rem;
+        }
+    }
+}
 /* End BattleAnnouncement customization */
 </style>

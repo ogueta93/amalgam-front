@@ -9,16 +9,16 @@
         <div class="game-content-deck">
             <div class="deck-filters">
                 <div class="deck-filters-content">
-                    <b-form inline @submit="onSubmit">
-                        <b-form-group class="marging-element" :label="$t('deck.deckCardNameFilter')">
-                            <b-input-group>
-                                <b-form-input v-model="filters.cardName"></b-form-input>
-                            </b-input-group>
-                        </b-form-group>
-                        <b-form-group class="marging-element" :label="$t('deck.deckCardTypeFilter')">
-                            <b-form-select :options="typeCardOptions" v-model="filters.cardType"></b-form-select>
-                        </b-form-group>
-                    </b-form>
+                    <form id="deck-search-form" name="form" @submit.prevent="onSubmit">
+                        <div class="input-group-flex inline">
+                            <input class="input-form-flex sm" type="text" v-model="filters.cardName" :placeholder="this.$i18n.t('deck.deckCardNameFilter')">
+                            <select class="input-form-flex margin-left sm" v-model="filters.cardType">
+                                <option v-for="option in typeCardOptions" v-bind:key="option.value" v-bind:value="option.value">
+                                    {{ option.text }}
+                                </option>
+                            </select>
+                        </div>
+                    </form>
                 </div>
                 <div class="deck-filters-bottom">
                     <div @click="getUserCards" class="fa-button">
@@ -75,7 +75,7 @@ export default {
             ]
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
         this.getUserCards();
 
@@ -87,21 +87,19 @@ export default {
             this.$root.$on(EVENT.SHOP_DECK_SELECTION, this.callbackToggleShopSelection);
         }
     },
-    destroyed: function() {
+    destroyed() {
         this.$root.$off(EVENT.BATTLE_DECK_SELECTION, this.callbackToggleDeckSelection);
         this.$root.$off(EVENT.SHOP_DECK_SELECTION, this.callbackToggleDeckSelection);
     },
     methods: {
-        onSubmit: function(evt) {
-            evt.preventDefault();
-            
+        onSubmit(evt) {
             this.getUserCards();
         },
-        toggleFilters: function() {
+        toggleFilters() {
             document.querySelector('.deck-filters').classList.toggle('show-filters');
             document.querySelector('.deck-cards').classList.toggle('show-filters');
         },
-        getUserCards: function() {
+        getUserCards() {
             document.activeElement.blur();
 
             var filters = {
@@ -117,13 +115,13 @@ export default {
             this.$loading.start(this.loadingName);
         },
 
-        callBackGetUserCards: function(response) {
+        callBackGetUserCards(response) {
             var that = this;
             var cards = response;
 
             if (this.battlePhase === BATTLE_PHASE.CARD_SELECTION_PHASE || this.shopMode) {
-                cards.forEach(function(obj, index, array) {
-                    var cardSelected = that.cardsSelected.filter(function(element){
+                cards.forEach((obj, index, array) => {
+                    var cardSelected = that.cardsSelected.filter((element) => {
                         return element.userCardId === obj.userCardId;
                     });
 
@@ -139,15 +137,15 @@ export default {
             this.$loading.end(this.loadingName);
             this.toggleFilters();
         },
-        callbackToggleDeckSelection: function(userCardId) {
+        callbackToggleDeckSelection(userCardId) {
             var that = this;
 
-            var cardsFiltered = this.cardsSelected.filter(function(obj){
+            var cardsFiltered = this.cardsSelected.filter((obj) => {
                 return obj.userCardId === userCardId;
             });
 
             if (this.cardsSelected.length === 5 && !(cardsFiltered.length > 0)) {
-                this.cards.forEach(function(obj, index){
+                this.cards.forEach((obj, index) => {
                     if (obj.userCardId === userCardId) {
                         that.cards[index].selected = false;
                         return;
@@ -159,11 +157,11 @@ export default {
             }
 
             if (cardsFiltered.length > 0) {
-                this.cardsSelected = this.cardsSelected.filter(function(obj){
+                this.cardsSelected = this.cardsSelected.filter((obj) => {
                     return obj.userCardId !== userCardId;
                 });
             } else {
-                var cardSelected = this.cards.filter(function(obj){
+                var cardSelected = this.cards.filter((obj) => {
                     return obj.userCardId === userCardId;
                 });
             
@@ -173,19 +171,19 @@ export default {
             this.$root.$emit(EVENT.BATTLE_DECK_RESUME_SELECTION, this.cardsSelected);
         },
 
-        callbackToggleShopSelection: function(userCardId) {
+        callbackToggleShopSelection(userCardId) {
             var that = this;
 
-            var cardsFiltered = this.cardsSelected.filter(function(obj){
+            var cardsFiltered = this.cardsSelected.filter((obj) => {
                 return obj.userCardId === userCardId;
             });
             
             if (cardsFiltered.length > 0) {
-                this.cardsSelected = this.cardsSelected.filter(function(obj){
+                this.cardsSelected = this.cardsSelected.filter((obj) => {
                     return obj.userCardId !== userCardId;
                 });
             } else {
-                var cardSelected = this.cards.filter(function(obj){
+                var cardSelected = this.cards.filter((obj) => {
                     return obj.userCardId === userCardId;
                 });
             
@@ -280,7 +278,16 @@ $button-color: #1a73e8;
     }
 }
 
-@media (max-width: 768px) {
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
     .game-content-deck {
         .deck-filters {
             &.show-filters {
@@ -296,9 +303,7 @@ $button-color: #1a73e8;
             }
         }
     }
-}
 
-@media (max-width: 768px) and (orientation: landscape) {
     .game-content {
         .game-content-header {
             height: 20%;

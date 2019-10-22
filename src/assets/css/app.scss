@@ -27,23 +27,51 @@ body {
 }
 
 #app {
+    position: relative;
     height: 100%;
     width: 100%;
 }
+/** End global */
 
-.input-group-inline-flex {
+
+/** Form App Elements */
+.input-group-flex {
     display: flex;
     width: 100%;
-    flex-wrap: nowrap;
+    align-items: flex-end;
 
-    .input-form-flex {
+    *:not(:last-child) {
+        margin-right: 10px; 
+    } 
+
+    &.inline {
+        flex-wrap: nowrap;
+    }
+
+    .include-label {
+        display: flex;
         max-width: 100%;
         min-width: 5%;
+        width: 100%;
+        flex-flow: column;
+    
+        .input-label {
+            margin-bottom: 5px;
+            font-family: 'Audiowide', cursive;
+            font-size: 1rem;
+        }
+    
+        &.sm {
+            max-width: 25%;
+        }
     }
 }
 
 .input-form-flex {
     width: 100%;
+    max-width: 100%;
+    min-width: 5%;
+    max-height: 36px;
     padding: 5px;
     border: 1px solid $primary-color-light;
 
@@ -59,9 +87,63 @@ body {
     &::placeholder {
         color: $primary-color-light;
     }
+
+    &.sm {
+        max-width: 25%;
+    }
 }
 
-/** End global */
+select {
+    &.input-form-flex {
+        background: #fff;
+    }
+}
+
+.switch {
+    position: relative;
+    width: 60px;
+    height: 36px;
+
+    input[type="checkbox"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        z-index: 1;
+        cursor: pointer;
+    }
+
+    .slider {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        padding: 2px;
+        background-color: #ccc;
+        border-radius: 34px;
+        transition: all 0.5s ease-out;
+
+        .round {
+            position: absolute;
+            width: 50%;
+            left: 4px;
+            height: 80%;
+            background-color: white;
+            border-radius: 50%;
+            transition: all 0.5s ease-out;
+        }
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:checked + .slider .round {
+        left: 26px;
+    }
+}
+
+/** End Form App Elements */
 
 /** Element game-content */
 $game-content-background-color: #f8f9fa;
@@ -107,6 +189,7 @@ $game-header-filters-search-buttom-color: #1a73e8;
         overflow-y: auto;
         padding: 10px;
         border: 1px solid $game-content-border-color;
+        background-color: $game-content-background-color;
 
         .game-filters {
             display: flex;
@@ -205,13 +288,14 @@ $loading-spinner-color: #1dbdff;
         width: 100%;
         display: flex;
         justify-content: center;
-        align-items: flex-end;
-        font-size: 40px;
+        align-items: center;
 
-        .loading-spinner {
-            color: $loading-spinner-color;
-            width: 5em;
-            height: 5em;
+        .loading-spinner-element {
+            background-color: $loading-spinner-color;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            animation: loading-spinner-animation 1s linear infinite;
         }
     }
 
@@ -220,8 +304,109 @@ $loading-spinner-color: #1dbdff;
         width: 100%;
         display: flex;
         justify-content: center;
-        font-size: 40px;
+        text-align: center;
+        font-size: 2.5rem;
         color: white;
     }
 }
+
+@keyframes loading-spinner-animation {
+    from {
+        opacity: 1;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 0;
+        transform: scale(2);
+    }
+}
 /** END loading-content*/
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .input-group-flex {     
+        .include-label {
+            .input-label {
+                font-size: 0.9rem;
+            }
+        }
+    }
+
+    .input-form-flex {
+        padding: 2px;
+        font-size: 0.9rem;
+    }
+
+    .switch {
+        height: 27px;
+
+        .slider {
+            .round {
+                width: 40%;
+            }
+        }
+
+        input:checked + .slider .round {
+            left: 32px;
+        }
+    }
+
+    .loading-content {
+        .loading-symbol {    
+            .loading-spinner-element {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    
+        .loading-text {
+            font-size: 1rem;
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .input-group-flex {     
+        .include-label {
+            .input-label {
+                font-size: 0.7rem;
+            }
+        }
+    }
+    
+    .input-form-flex {
+        padding: 2px;
+        font-size: 0.7rem;
+    }
+
+    .switch {
+        height: 22px;
+
+        .slider {
+            .round {
+                width: 30%;
+            }
+        }
+
+        input:checked + .slider .round {
+            left: 38px;
+        }
+    }
+
+    .loading-content {
+        .loading-symbol {    
+            .loading-spinner-element {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    
+        .loading-text {
+            font-size: 1rem;
+        }
+    }
+}

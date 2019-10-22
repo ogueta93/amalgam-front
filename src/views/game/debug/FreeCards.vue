@@ -15,7 +15,7 @@ export default {
            
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
     },
     methods: {

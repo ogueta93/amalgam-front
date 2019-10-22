@@ -33,11 +33,11 @@ export default {
            name: null
         }
     },
-    mounted: function()
+    mounted()
     {
         /** Initial module instance */
     },
-    updated: function()
+    updated()
     {
         /** after render */
     },
@@ -71,6 +71,35 @@ export default {
 
         #content.active {
             width: 100%;
+        }
+    }
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .game {
+        .game-header {
+            height: 33px;
+        }
+        
+        .game-navigation {
+            height: calc(100% - 33px);
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .game {
+        .game-header {
+            height: 33px;
+        }
+
+        .game-navigation {
+            height: calc(100% - 33px);
         }
     }
 }

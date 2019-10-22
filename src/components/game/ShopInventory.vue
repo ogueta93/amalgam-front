@@ -48,20 +48,20 @@ export default {
             show: null
         }
     },
-    mounted: function() {
+    mounted() {
         this.$root.$on(EVENT.OPEN_BOOSTER, this.openBoosterEvent);
 
         this.getUserBoosters();
     },
-    destroyed: function() {
+    destroyed() {
         this.$root.$off(EVENT.OPEN_BOOSTER);
     },
     methods: {
-       getUserBoosters: function() {
+       getUserBoosters() {
             this.$webSocket.sendComplexAction(ACTION.GET_USER_BOOSTERS_ACTION, this.$options.name, {}, this.callbackGetUserBoosters);
        },
 
-       openBoosterEvent: function(component) {
+       openBoosterEvent(component) {
            this.currentComponent = component;
            var data = {id: this.currentComponent.booster.id};
 
@@ -78,12 +78,12 @@ export default {
            }
        },
 
-       callbackGetUserBoosters: function(response) {
+       callbackGetUserBoosters(response) {
            var that = this;
            this.userBoosters = [];
            var boosters = response;
 
-            boosters.forEach(function(obj) {
+            boosters.forEach((obj) => {
                 var userBoosterType = that.userBoosters.filter(function(element) {
                     return obj.boosterType.id === element.id;
                 });
@@ -175,6 +175,91 @@ export default {
                 width: 100%;
                 justify-content: space-evenly;
                 align-items: center;
+            }
+        }
+    }
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .shop-inventory-content {
+        .shop-inventory {
+            width: 90%;
+            height: 90%;
+
+            .boosters-inventory-content {
+                width: 30%;
+            }
+
+            .open-booster-content {
+                width: 65%;
+              
+                .open-booster-title {
+                    font-size: 
+                    1.3rem;
+                }
+            }
+        }
+    }
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .shop-inventory-content {
+        .shop-inventory {
+            width: 90%;
+            height: 90%;
+
+            .boosters-inventory-content {
+                width: 30%;
+
+                .game-content {
+                    .game-content-header {
+                        .game-header-title {
+                            font-size: 0.7rem;
+                        }
+                    }
+                }
+            }
+
+            .open-booster-content {
+                width: 65%;
+              
+                .open-booster-title {
+                    font-size: 
+                    0.8rem;
+                }
+            }
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .shop-inventory-content {
+        .shop-inventory {
+            width: 90%;
+            height: 90%;
+
+            .boosters-inventory-content {
+                width: 30%;
+
+                .game-content {
+                    .game-content-header {
+                        .game-header-title {
+                            font-size: 0.7rem;
+                        }
+                    }
+                }
+            }
+
+            .open-booster-content {
+                width: 65%;
+              
+                .open-booster-title {
+                    font-size: 
+                    0.8rem;
+                }
             }
         }
     }

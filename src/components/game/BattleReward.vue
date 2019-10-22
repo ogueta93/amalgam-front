@@ -64,17 +64,17 @@ export default {
             player: this.$localStorage.getUser()
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
         this.$root.$on(EVENT.BATTLE_REWARD_SELECTION, this.callbackRewardSelection);
 
         this.setBattleReward();
     },
-    destroyed: function() {
+    destroyed() {
         this.$root.$off(EVENT.BATTLE_REWARD_SELECTION);
     },
     methods: {
-        setBattleReward: function() {
+        setBattleReward() {
             this.$battle.setData(this.battleData);
 
             this.rewardType = this.$battle.getRewardType();
@@ -87,7 +87,7 @@ export default {
                 this.countDown = this.setCountDown();
             }
         },
-        claimReward: function() {
+        claimReward() {
             var data = {
                 battleId: this.$battle.getId(),
                 userCardId: this.rewardSelected !== null ? this.rewardSelected.userCardId : null
@@ -95,18 +95,18 @@ export default {
 
             this.$webSocket.sendComplexAction(ACTION.CLAIM_BATTLE_REWARD, this.$options.name, data, this.callBackClaimBattleReward);
         },
-        getExpiredTime: function() {
+        getExpiredTime() {
             var diff = parseInt((this.$battle.getRewardExpiredTime() - new Date) / 1000);
 
             return diff > 0 ? diff : 0;
         },
-        showErrorExpiredTime: function() {
+        showErrorExpiredTime() {
             this.$root.$emit(EVENT.ERROR_EVENT, {message: 'battleError_11', phase: 4});
         },
-        setCountDown: function() {
+        setCountDown() {
             var that = this;
           
-            var countDown = setInterval(function() {
+            var countDown = setInterval(() => {
                 that.expiredTime = that.getExpiredTime();
                 if (that.expiredTime === 0) {
                     that.showErrorExpiredTime();
@@ -117,7 +117,7 @@ export default {
             return countDown;
         },
 
-        callbackRewardSelection: function(data) {
+        callbackRewardSelection(data) {
             if (this.rewardSelected && data !== null) {
                 data.cardRewardedSelected = false;
                 return;
@@ -125,7 +125,7 @@ export default {
 
             this.rewardSelected = data !== null ? data.card : null;
         },
-        callBackClaimBattleReward: function(response) {
+        callBackClaimBattleReward(response) {
             this.$router.push('/game/deck');
         }
     }
@@ -281,5 +281,130 @@ export default {
           transform: rotate(0deg);
       }
     }
+
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+        .battle-reward-content {
+        .battle-reward-text-content {
+            font-size: 1.5rem;
+        }
+
+        .battle-reward-button-content {
+            align-items: flex-end;
+        }
+
+        .battle-reward-time-limit {
+            top: -20px;
+            right: -25px;
+        }
+    }
+}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .battle-reward-content {
+        .battle-reward-text-content {
+            height: 25%;
+            font-size: 0.8rem;
+        }
+
+        .battle-reward-button-content {
+            align-items: flex-end;
+            .battle-reward-button {
+                font-size: 0.6rem;
+                padding: 10px;
+            }
+        }
+
+        .battle-reward-time-limit {
+            top: -20px;
+            right: -25px;
+            height: 100px;
+            width: 150px;
+
+            .battle-reward-time-limit-text {
+                font-size: 0.8rem;
+            }
+
+            .battle-reward-time-limit-circle {
+                height: 40px;
+                width: 40px;
+                border-radius: 40px;
+
+                .quarter-circle {
+                    height: 20px;
+                    width: 20px;
+                    border-radius: 20px 0 0 0;
+                    top: 20px * -1;
+                }
+
+                &.danger {
+                    .limit-circle-text {
+                        color: black;
+                        font-size: 1.5rem;
+                    }
+                }
+
+                .limit-circle-text {
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .battle-reward-content {
+        .battle-reward-text-content {
+            height: 25%;
+            font-size: 0.8rem;
+        }
+
+        .battle-reward-button-content {
+            align-items: flex-end;
+            .battle-reward-button {
+                font-size: 0.6rem;
+                padding: 10px;
+            }
+        }
+
+        .battle-reward-time-limit {
+            top: -20px;
+            right: -25px;
+            height: 100px;
+            width: 150px;
+
+            .battle-reward-time-limit-text {
+                font-size: 0.8rem;
+            }
+
+            .battle-reward-time-limit-circle {
+                height: 40px;
+                width: 40px;
+                border-radius: 40px;
+
+                .quarter-circle {
+                    height: 20px;
+                    width: 20px;
+                    border-radius: 20px 0 0 0;
+                    top: 20px * -1;
+                }
+
+                &.danger {
+                    .limit-circle-text {
+                        color: black;
+                        font-size: 1.5rem;
+                    }
+                }
+
+                .limit-circle-text {
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+}
 /* End BattleReward customization */
 </style>

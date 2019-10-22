@@ -36,16 +36,16 @@ export default {
             password: null
         }
     },
-    mounted: function()
+    mounted()
     {
         /** Initial module instance */
     },
-    updated: function()
+    updated()
     {
         /** after render */
     },
     methods: {
-        submitLogin: function() {
+        submitLogin() {
             document.activeElement.blur();
 
             var data = {
@@ -56,7 +56,7 @@ export default {
             this.$webSocket.sendComplexAction(ACTION.LOGIN_ACTION, this.$options.name, data, this.callBackLogin);
         },
 
-        callBackLogin: function(response, error) {
+        callBackLogin(response, error) {
             if (error) {
                 console.log('Error', response);
             } else {
@@ -93,7 +93,7 @@ export default {
         width: 100%;
         align-items: center;
         justify-content: center;
-        font-size: 1.5em;
+        font-size: 1.5rem;
         text-transform: uppercase;
     }
     .login-content {
@@ -114,7 +114,7 @@ export default {
                 width: 100%;
                 justify-content: flex-end;
                 color: $primary-color;
-                font-size: 0.8em;
+                font-size: 0.8rem;
             }
         }
 
@@ -127,6 +127,45 @@ export default {
             background-color: $primary-color;
             color:white;
             cursor: pointer;
+        }
+    }
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .login-container {
+        .login-content {
+            .login-form {
+                .forgot-password {
+                    font-size: 0.8rem;
+                }
+            }
+            
+            .submit-button {
+                padding: 7px;
+                font-size: 0.9rem; 
+            }
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .login-container {
+        .login-content {
+            .login-form {
+                .forgot-password {
+                    font-size: 0.6rem;
+                }
+            }
+
+            .submit-button {
+                padding: 5px;
+                font-size: 0.7rem; 
+            }
         }
     }
 }

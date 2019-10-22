@@ -9,17 +9,23 @@
         <div class="game-content-body">
             <div class="game-filters">
                   <div class="game-filters-content">
-                    <b-form inline @submit="onSubmit">
-                        <b-form-group class="marging-element" :label="$t('userFinder.userNameFilter')">
-                            <b-input-group>
-                                <b-form-input v-model="filters.nickName"></b-form-input>
-                            </b-input-group>
-                        </b-form-group>
-                        <b-form-group class="marging-element" :label="$t('userFinder.optionsFilter')">
-                            <b-form-checkbox-group :options="filterOptions" v-model="filters.optionsSelected" switches stacked>
-                            </b-form-checkbox-group>
-                        </b-form-group>
-                    </b-form>
+                    <form id="user-search-form" name="form" @submit.prevent="onSubmit">
+                        <div class="input-group-flex">
+                            <div class="include-label">
+                                <div class="input-label">{{ $t('userFinder.userNameFilter') }}</div>
+                                <input class="input-form-flex" type="text" v-model="filters.nickName">
+                            </div>
+                            <div class="include-label">
+                                <div class="input-label">{{ $t('userFinder.onlineUserFilter') }}</div>
+                                <div class="switch">
+                                    <input checked type="checkbox" :value="filterOptions.online" v-model="filters.optionsSelected">
+                                    <div class="slider">
+                                        <div class="round"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="game-filters-bottom">
                     <div @click="getUsers" class="search-filters-button">
@@ -59,34 +65,33 @@ export default {
                 nickName: "",
                 optionsSelected: ['online']
             },
-            filterOptions: [
-                { text: this.$i18n.t('userFinder.onlineUserFilter'), value: 'online' },
-                { text: this.$i18n.t('userFinder.onlyFriendsFilter'), value: 'friends' }
-            ],
+            filterOptions: {
+                online: 'online',
+            },
             loadingName: 'userFinderLoading',
             battleTypes: BATTLE_TYPE
         }
     },
-    mounted: function() {
+    mounted() {
         /** Initial module instance */
         if (this.startFilter) {
             this.toggleFilters();
         }
     },
-    updated: function() {
+    updated() {
         /** after render */
     },
     methods: {
-        onSubmit: function(evt) {
+        onSubmit(evt) {
             evt.preventDefault();
             
             this.getUsers();
         },
-        toggleFilters: function() {
+        toggleFilters() {
             document.querySelector('.game-filters').classList.toggle('show-filters');
             document.querySelector('.game-body-content').classList.toggle('show-filters');
         },
-        getUsers: function() {
+        getUsers() {
             document.activeElement.blur();
 
             var filters = {
@@ -97,7 +102,7 @@ export default {
             this.$webSocket.sendComplexAction(ACTION.GET_USERS_ACTION, this.$options.name, filters, this.callBackGetUsers);
             this.$loading.start(this.loadingName, '.battle-chamber-finder');
         },
-        newBattle: function(userId) {
+        newBattle(userId) {
             var data = {
                 users: [userId],
                 type: this.battleTypes[this.$route.params.type.toUpperCase()]
@@ -106,7 +111,7 @@ export default {
             this.$webSocket.sendAction(ACTION.NEW_BATTLE_ACTION, data);
         },
         
-        callBackGetUsers: function(response) {
+        callBackGetUsers(response) {
             this.users = response;
 
             if (this.users.length > 0) {
@@ -159,13 +164,126 @@ export default {
             justify-content: space-between;
 
             i {
-                font-size: 0.9em;
+                font-size: 0.9rem;
                 cursor: pointer;
 
                 &:hover {
                     transform: scale(1.5);
                 }
             } 
+        }
+    }
+}
+
+/* Tablets ----------- */
+@media (min-width: 768px) and (max-width: 1024px) {}
+
+/* Big Smartphones (landscape) ----------- */
+@media (max-height: 450px) and (min-width: 768px) and (max-width: 1024px) {
+    .game-content {
+        .game-content-header {
+            .game-header-title, .game-header-controls {
+                font-size: 0.8rem;
+            }
+        }
+
+        .game-content-body {
+            .game-filters {
+                font-size: 0.8rem;
+                &.show-filters {
+                    height: 100%;
+                    border-bottom: none;
+                }
+            }
+            .game-body-content {
+                &.show-filters {
+                    height: 0%;
+                    overflow: hidden;
+                    padding: 0;
+                }
+            }
+        }
+    }
+
+    .user-content {
+        .user-content-element {    
+            height: 30px;
+
+             .user-img {
+                height: 20px;
+                width: 20px;
+
+                img {
+
+                    border-radius: 20px;
+                }
+            }
+
+            .user-nickname {
+                font-size: 0.7rem;
+            }
+
+            .user-actions {
+                width: 20%;
+                i {
+                    font-size: 0.6rem;
+                } 
+            }
+        }
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media (min-width: 481px) and (max-width: 767px) {
+    .game-content {
+        .game-content-header {
+            .game-header-title, .game-header-controls {
+                font-size: 0.8rem;
+            }
+        }
+
+        .game-content-body {
+            .game-filters {
+                font-size: 0.8rem;
+                &.show-filters {
+                    height: 100%;
+                    border-bottom: none;
+                }
+            }
+            .game-body-content {
+                &.show-filters {
+                    height: 0%;
+                    overflow: hidden;
+                    padding: 0;
+                }
+            }
+        }
+    }
+
+    .user-content {
+        .user-content-element {    
+            height: 30px;
+
+             .user-img {
+                height: 20px;
+                width: 20px;
+
+                img {
+
+                    border-radius: 20px;
+                }
+            }
+
+            .user-nickname {
+                font-size: 0.7rem;
+            }
+
+            .user-actions {
+                width: 20%;
+                i {
+                    font-size: 0.6rem;
+                } 
+            }
         }
     }
 }
