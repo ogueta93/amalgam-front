@@ -61,7 +61,7 @@ To start the application execute the next command:
 yarn serve
 ```
 
-## WPA
+## PWA
 [PWA](https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/?hl=en) is available for this proyect.
 The front requirements are:
 
