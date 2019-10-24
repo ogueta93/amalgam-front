@@ -1,6 +1,7 @@
 # Amalgam Frontend
 Amalgam front is a html5 videogame with [PWA](https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/?hl=en). Inspired in [Triple Triad](https://finalfantasy.fandom.com/wiki/Triple_Triad). It use node and Vue Cli mainly.
-- [Releases](https://github.com/ogueta93/amalgam-front/releases) 
+- [Releases](https://github.com/ogueta93/amalgam-front/releases)
+- Live Version: [Amalgam](https://amalgam-showcase.vascoframework.es/)
 
 ## Application Backend
 Amalgam fronted supplies front side. You can get the back here: 
