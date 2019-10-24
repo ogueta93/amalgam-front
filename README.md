@@ -1,5 +1,5 @@
 # Amalgam Frontend
-Amalgam front is a html5 videogame inspired in [Triple Triad](https://finalfantasy.fandom.com/wiki/Triple_Triad). It use node and Vue Cli mainly.
+Amalgam front is a html5 videogame with [PWA](https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/?hl=en). Inspired in [Triple Triad](https://finalfantasy.fandom.com/wiki/Triple_Triad). It use node and Vue Cli mainly.
 - [Releases](https://github.com/ogueta93/amalgam-front/releases) 
 
 ## Application Backend
@@ -13,6 +13,7 @@ Amalgam Dev Tools is a project that was maked with the idea to facilitied the ne
 ## Base technologies
 - [Node](https://nodejs.org/en/)
 - [Vue Cli](https://cli.vuejs.org/)
+- [PWA](https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/?hl=en)
 
 ## Requirements
 To run this proyect correctly you need to prepare your local machine:
@@ -58,4 +59,41 @@ module.exports  = {
 To start the application execute the next command:
 ```
 yarn serve
+```
+
+## WPA
+[PWA](https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/?hl=en) is available for this proyect.
+The front requirements are:
+
+### 1. Configure .env.production and set your wss connection compatible with ssl.
+```
+NODE_ENV=production
+VUE_APP_ENVIRONMENT=prod
+VUE_APP_TITLE=Amalgan
+**VUE_APP_WEBSOCKET_URL=wss://** {Example: VUE_APP_WEBSOCKET_URL=wss://mydomain:8080/wss2/}
+```
+
+### 2. Configure the manifest.json
+The file is located in **public/**
+
+```
+{
+    "name": "Amalgam",
+    "short_name": "Amalgam",
+    "icons": [
+	 {
+      		"src": "app_icon_192x192_original.png",
+      		"type": "image/png",
+      		"sizes": "192x192"
+    	}
+    ],
+    "start_url": "/",
+    "display": "fullscreen",
+    "orientation": "landscape"
+}
+```
+
+### 3.Build your application
+```
+yarn build
 ```
