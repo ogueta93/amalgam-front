@@ -93,7 +93,7 @@ The file is located in **public/**
 }
 ```
 
-### 3.Build your application
+### 3. Build your application
 ```
 yarn build
 ```
