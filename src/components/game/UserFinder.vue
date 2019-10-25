@@ -114,9 +114,7 @@ export default {
         callBackGetUsers(response) {
             this.users = response;
 
-            if (this.users.length > 0 || this.users.name !== undefined) {
-                this.toggleFilters();
-            }
+            this.toggleFilters();
 
             this.$loading.end(this.loadingName);
         }
