@@ -49,7 +49,7 @@ export default {
     methods: {
         callBackProcessConfirmation(confirmationId) {
             this.confirmationId = confirmationId;
-            this.confirmationTitle = this.$i18n.t(this.confirmationTitlePrefix + confirmationId);;
+            this.confirmationTitle = this.$i18n.t(this.confirmationTitlePrefix + confirmationId);
             this.confirmationMsg =  this.$i18n.t(this.confirmationMsgPrefix + confirmationId);
 
             this.el.style.display = 'flex';
